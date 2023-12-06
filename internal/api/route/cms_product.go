@@ -12,5 +12,6 @@ func NewCmsProductRoutes(c *CmsGroupRoutes, controller *controller.CmsProductCon
 	gr.POST("/", controller.CreateProduct)
 	gr.GET("/", controller.ListProduct)
 	gr.GET("/:id", controller.GetProductById)
+	gr.PATCH("/:id", controller.DecreaseProductQuantity)
 	return &CmsProductRoutes{}
 }

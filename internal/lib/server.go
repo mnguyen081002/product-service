@@ -2,11 +2,11 @@ package lib
 
 import (
 	"context"
+	"fmt"
 	config "productservice/config"
 	"productservice/internal/api/middlewares"
 	"productservice/internal/constants"
 	"productservice/internal/infrastructure"
-	"fmt"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -39,9 +39,9 @@ func NewServer(lifecycle fx.Lifecycle, zap *zap.Logger, config *config.Config, d
 	//instance.Use(gozap.RecoveryWithZap(zap, true))
 
 	instance.Use(middlewares.JSONMiddleware)
-	if config.Logger.Enabled {
-		instance.Use(middlewares.Logger)
-	}
+	//if config.Logger.Enabled {
+	instance.Use(middlewares.Logger)
+	//}
 	instance.Use(middlewares.ErrorHandler)
 
 	lifecycle.Append(fx.Hook{

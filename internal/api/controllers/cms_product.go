@@ -1,11 +1,11 @@
 package controller
 
 import (
+	"net/http"
 	"productservice/internal/api/request"
 	"productservice/internal/domain"
 	"productservice/internal/messaging/message"
 	"productservice/internal/messaging/producer"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -17,10 +17,11 @@ type CmsProductController struct {
 	logger             *zap.Logger
 }
 
-func NewCmsProductController(authService domain.CmsProductService, logger *zap.Logger) *CmsProductController {
+func NewCmsProductController(authService domain.CmsProductService, logger *zap.Logger, cmsProductProducer producer.CmsProductProducer) *CmsProductController {
 	controller := &CmsProductController{
-		cmsProductService: authService,
-		logger:            logger,
+		cmsProductService:  authService,
+		logger:             logger,
+		cmsProductProducer: cmsProductProducer,
 	}
 	return controller
 }

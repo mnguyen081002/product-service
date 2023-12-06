@@ -38,4 +38,4 @@ jwt:
   iss: 'iss'
 logger:
   level: 'debug'
-  enable: false
+  enable: true

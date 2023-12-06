@@ -4,13 +4,15 @@ import (
 	"go.uber.org/fx"
 	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
-	config "productservice/config"
+	"productservice/config"
+	controller "productservice/internal/api/controllers"
 	"productservice/internal/api/middlewares"
 	"productservice/internal/api/route"
 	"productservice/internal/infrastructure"
 	"productservice/internal/lib"
 	"productservice/internal/messaging/producer"
 	"productservice/internal/repository"
+	service "productservice/internal/services"
 	"productservice/internal/utils"
 )
 
