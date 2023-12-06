@@ -19,4 +19,5 @@ type CmsProductService interface {
 	GetProductById(ctx context.Context, id string) (product *models.Product, err error)
 	ListProduct(ctx context.Context, input request.ListProductRequest) (res []*models.Product, total *int64, err error)
 	DecreaseProductQuantity(ctx context.Context, id string, quantity int64) (err error)
+	DecreaseProductQuantityMutex(ctx context.Context, id string, quantity int64) (err error)
 }

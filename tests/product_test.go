@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	"go.uber.org/zap"
+	"os"
 	config2 "productservice/config"
 	"productservice/internal/api/request"
 	"productservice/internal/domain"
@@ -12,8 +14,6 @@ import (
 	"productservice/internal/messaging/subscriber"
 	"productservice/internal/repository"
 	service "productservice/internal/services"
-	"go.uber.org/zap"
-	"os"
 	"sync"
 	"testing"
 	"time"
@@ -35,7 +35,7 @@ func setup() {
 	cmsProductService = service.NewCmsProductService(db, nil, repository.NewUnitOfWork(config), config, logger)
 
 	kafkaProducer := infrastructure.NewKafkaProducer()
-	cmsProductProducer = producer.NewCmsProductProducer(kafkaProducer)
+	cmsProductProducer = producer.NewCmsProductProducer(kafkaProducer, logger)
 
 	ctx = context.WithValue(context.Background(), "x-user-id", "ee564790-1e10-43a0-9968-78dda6496ff9")
 }
@@ -54,15 +54,17 @@ func TestDecreaseProductQuantityCurrency(t *testing.T) {
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 	subscriber.NewUpdateProductSubscribe(cmsProductService, logger)
+	logger.Debug("TestDecreaseProductQuantityCurrency", zap.String("product_id", p.ID.String()))
 	userID := ctx.Value("x-user-id").(string)
 	for i := 0; i < 2; i++ {
 		go func() {
 			defer wg.Done()
-			err := cmsProductProducer.PublishDecreaseProductQuantity(ctx, message.DecreaseProductQuantity{
+			err := cmsProductProducer.DecreaseProductQuantity(ctx, message.DecreaseProductQuantity{
 				ProductID: p.ID.String(),
 				Quantity:  1,
 				UserID:    userID,
 			})
+
 			if err != nil {
 				t.Errorf("Error get product by id %+v", err)
 			}
@@ -70,7 +72,7 @@ func TestDecreaseProductQuantityCurrency(t *testing.T) {
 	}
 
 	wg.Wait()
-	time.Sleep(1 * time.Second) // wait for update product
+	time.Sleep(5 * time.Second) // wait for update product
 	r, err := cmsProductService.GetProductById(ctx, p.ID.String())
 	if err != nil {
 		t.Errorf("Error get product by id %+v", err)

@@ -2,7 +2,7 @@ debug: true
 contextTimeout: 10000
 
 server:
-  port: '8080'
+  port: '8081'
   host: '127.0.0.1'
   env: 'local'
   useRedis: false
@@ -38,4 +38,4 @@ jwt:
   iss: 'iss'
 logger:
   level: 'debug'
-  enable: true
+  enabled: true

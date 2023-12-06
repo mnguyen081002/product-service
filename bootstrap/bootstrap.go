@@ -10,7 +10,7 @@ import (
 	"productservice/internal/api/route"
 	"productservice/internal/infrastructure"
 	"productservice/internal/lib"
-	"productservice/internal/messaging/producer"
+	"productservice/internal/messaging"
 	"productservice/internal/repository"
 	service "productservice/internal/services"
 	"productservice/internal/utils"
@@ -33,7 +33,7 @@ func inject() fx.Option {
 		controller.Module,
 		middlewares.Module,
 		infrastructure.Module,
-		producer.Module,
+		messaging.Module,
 	)
 }
 

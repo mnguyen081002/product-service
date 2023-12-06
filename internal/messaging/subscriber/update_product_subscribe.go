@@ -2,11 +2,11 @@ package subscriber
 
 import (
 	"context"
+	"go.uber.org/zap"
 	"productservice/internal/constants"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
 	"productservice/internal/messaging/mapper"
-	"go.uber.org/zap"
 )
 
 type UpdateProductSubscribe struct {
@@ -42,6 +42,5 @@ func (s *UpdateProductSubscribe) Subscribe() {
 			s.logger.Error("Error commit message", zap.Error(err))
 			continue
 		}
-		s.logger.Info("Message received", zap.String("message", string(m.Value)))
 	}
 }

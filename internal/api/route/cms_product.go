@@ -13,5 +13,6 @@ func NewCmsProductRoutes(c *CmsGroupRoutes, controller *controller.CmsProductCon
 	gr.GET("/", controller.ListProduct)
 	gr.GET("/:id", controller.GetProductById)
 	gr.PATCH("/:id", controller.DecreaseProductQuantity)
+	gr.PATCH("/mutex/:id", controller.DecreaseProductQuantityMutex)
 	return &CmsProductRoutes{}
 }

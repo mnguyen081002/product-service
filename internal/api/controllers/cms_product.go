@@ -1,14 +1,14 @@
 package controller
 
 import (
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"net/http"
 	"productservice/internal/api/request"
 	"productservice/internal/domain"
 	"productservice/internal/messaging/message"
 	"productservice/internal/messaging/producer"
-
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
+	"productservice/internal/utils"
 )
 
 type CmsProductController struct {
@@ -77,15 +77,37 @@ func (b *CmsProductController) DecreaseProductQuantity(c *gin.Context) {
 	id := c.Param("id")
 	var req request.UpdateProductQuantityRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
+		ResponseValidationError(c, err)
+		return
+	}
+	uid, err := utils.GetUserUUIDFromContext(c.Request.Context())
+	if err != nil {
 		ResponseError(c, err)
 		return
 	}
 
-	err := b.cmsProductProducer.PublishDecreaseProductQuantity(c.Request.Context(), message.DecreaseProductQuantity{
+	err = b.cmsProductProducer.DecreaseProductQuantity(c.Request.Context(), message.DecreaseProductQuantity{
 		ProductID: id,
 		Quantity:  req.Quantity,
-		UserID:    c.GetString("user_id"),
+		UserID:    uid.String(),
 	})
+
+	if err != nil {
+		ResponseError(c, err)
+		return
+	}
+	Response(c, http.StatusOK, "success", nil)
+}
+
+func (b *CmsProductController) DecreaseProductQuantityMutex(c *gin.Context) {
+	id := c.Param("id")
+	var req request.UpdateProductQuantityRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		ResponseValidationError(c, err)
+		return
+	}
+
+	err := b.cmsProductService.DecreaseProductQuantityMutex(c.Request.Context(), id, req.Quantity)
 
 	if err != nil {
 		ResponseError(c, err)

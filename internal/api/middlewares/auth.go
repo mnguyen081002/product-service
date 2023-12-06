@@ -2,10 +2,10 @@ package middlewares
 
 import (
 	"context"
-	"productservice/internal/api/response"
-	"productservice/internal/api_errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"productservice/internal/api/response"
+	"productservice/internal/api_errors"
 )
 
 func (e *GinMiddleware) Auth(authorization bool) gin.HandlerFunc {

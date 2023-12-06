@@ -22,7 +22,6 @@ func NewKafkaSubscribe(topic string) KafkaSubscribe {
 		MaxBytes:  10e6, // 10MB
 	})
 
-	// wait signal to close
 	sigs := make(chan os.Signal, 1)
 	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
 	go func() {
