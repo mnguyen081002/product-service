@@ -17,7 +17,7 @@ type Product struct {
 	OriPrice    int64          `json:"ori_price" gorm:"column:ori_price;type:bigint;not null;default:0" bson:"ori_price"`
 	TotalSold   int64          `json:"total_sold" gorm:"column:total_sold;type:bigint;not null;default:0" bson:"total_sold"`
 	MedRating   float64        `json:"med_rating" gorm:"column:med_rating;type:float;not null;default:0" bson:"med_rating"`
-	CityID      uuid.UUID      `json:"city_id" gorm:"column:city_id;type:uuid;not null;default:0" bson:"city_id"`
+	CityID      string         `json:"city_id" gorm:"column:city_id;type:varchar(255)" bson:"city_id"`
 }
 
 func (u *Product) MarshalBSON() ([]byte, error) {
