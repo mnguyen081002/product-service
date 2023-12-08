@@ -25,7 +25,7 @@ database:
     port: '5432'
     username: 'postgres'
     password: 'postgres'
-    name: 'product_service'
+    name: 'n_product_service'
     sslmode: 'disable'
     timezone: 'Asia/Ho_Chi_Minh'
 
@@ -38,4 +38,4 @@ jwt:
   iss: 'iss'
 logger:
   level: 'debug'
-  enabled: true
+  enabled: false

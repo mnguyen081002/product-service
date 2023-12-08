@@ -71,7 +71,6 @@ func (a *cmsProductService) DecreaseProductQuantity(ctx context.Context, id stri
 	if err != nil {
 		return err
 	}
-	time.Sleep(100 * time.Millisecond) // for test concurrency
 
 	if product.Quantity < quantity {
 		return errors.New(api_errors.ErrQuantityNotEnough)

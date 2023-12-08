@@ -1,10 +1,10 @@
 package gormlib
 
 import (
-	"productservice/internal/api/request"
-	"productservice/internal/infrastructure"
 	"github.com/pkg/errors"
 	"gorm.io/gorm"
+	"productservice/internal/api/request"
+	"productservice/internal/infrastructure"
 )
 
 type GormRepository struct {
@@ -40,7 +40,7 @@ func GormQueryPagination[E any](tx *gorm.DB, o request.PageOptions, data *[]*E) 
 	}
 	offset := (o.Page - 1) * o.Limit
 
-	q.tx = q.tx.Debug().Offset(int(offset)).Limit(int(o.Limit)).Find(&data)
+	q.tx = q.tx.Offset(int(offset)).Limit(int(o.Limit)).Find(&data)
 	return q
 }
 

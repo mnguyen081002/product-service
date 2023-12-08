@@ -3,11 +3,11 @@ package infrastructure
 import (
 	"context"
 	"database/sql"
-	config "productservice/config"
-	"productservice/internal/models"
 	"fmt"
 	"log"
 	"os"
+	config "productservice/config"
+	"productservice/internal/models"
 	"time"
 
 	"go.mongodb.org/mongo-driver/mongo"

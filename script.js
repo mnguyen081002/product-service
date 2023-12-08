@@ -12,7 +12,7 @@ export const options = {
 
 export default function () {
   const res = http.get(
-    'http://127.0.0.1:8080/v1/api/cms/product?search=hea&price=200&limit=10&page=1',
+    'http://127.0.0.1:8081/v1/api/cms/product?search=hea&price=200&limit=10&page=1',
     {
       headers: {
         'x-user-id': '3095398a-ed67-4770-bf58-9ce3c682df13',
@@ -20,6 +20,6 @@ export default function () {
     }
   );
   check(res, { 'status was 200': (r) => r.status == 200 });
-  check(res, { 'duration < 500ms': (r) => r.timings.duration < 1000 });
+  check(res, { 'duration < 500ms': (r) => r.timings.duration < 500 });
   sleep(1);
 }
