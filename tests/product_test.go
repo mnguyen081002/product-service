@@ -3,39 +3,21 @@ package main
 import (
 	"context"
 	"go.uber.org/zap"
-	"os"
 	config2 "productservice/config"
 	"productservice/internal/api/request"
-	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
 	"productservice/internal/lib"
 	"productservice/internal/messaging/message"
-	"productservice/internal/messaging/producer"
 	"productservice/internal/messaging/subscriber"
-	"productservice/internal/repository"
-	service "productservice/internal/services"
 	"sync"
 	"testing"
 	"time"
-)
-
-var (
-	db                 infrastructure.Database
-	cmsProductService  domain.CmsProductService
-	cmsProductProducer producer.CmsProductProducer
-	ctx                context.Context
-	config             *config2.Config
-	logger             *zap.Logger
 )
 
 func setup() {
 	config = config2.NewConfig("/../config/config.yaml")()
 	logger = lib.NewZapLogger(config)
 	db = infrastructure.NewDatabase(config, logger)
-	cmsProductService = service.NewCmsProductService(db, nil, repository.NewUnitOfWork(config), config, logger)
-
-	kafkaProducer := infrastructure.NewKafkaProducer()
-	cmsProductProducer = producer.NewCmsProductProducer(kafkaProducer, logger)
 
 	ctx = context.WithValue(context.Background(), "x-user-id", "ee564790-1e10-43a0-9968-78dda6496ff9")
 }
@@ -54,7 +36,6 @@ func TestDecreaseProductQuantityCurrency(t *testing.T) {
 	wg := sync.WaitGroup{}
 	wg.Add(2)
 	subscriber.NewUpdateProductSubscribe(cmsProductService, logger)
-	logger.Debug("TestDecreaseProductQuantityCurrency", zap.String("product_id", p.ID.String()))
 	userID := ctx.Value("x-user-id").(string)
 	for i := 0; i < 2; i++ {
 		go func() {
@@ -65,6 +46,8 @@ func TestDecreaseProductQuantityCurrency(t *testing.T) {
 				UserID:    userID,
 			})
 
+			logger.Debug("Decrease product quantity", zap.String("product_id", p.ID.String()), zap.Int("quantity", 1))
+
 			if err != nil {
 				t.Errorf("Error get product by id %+v", err)
 			}
@@ -72,7 +55,7 @@ func TestDecreaseProductQuantityCurrency(t *testing.T) {
 	}
 
 	wg.Wait()
-	time.Sleep(5 * time.Second) // wait for update product
+	time.Sleep(4 * time.Second) // wait for update product
 	r, err := cmsProductService.GetProductById(ctx, p.ID.String())
 	if err != nil {
 		t.Errorf("Error get product by id %+v", err)
@@ -81,10 +64,4 @@ func TestDecreaseProductQuantityCurrency(t *testing.T) {
 	if r.Quantity != 0 {
 		t.Error("Quantity is not 0", p.ID.String())
 	}
-}
-
-func TestMain(m *testing.M) {
-	setup()
-	code := m.Run()
-	os.Exit(code)
 }

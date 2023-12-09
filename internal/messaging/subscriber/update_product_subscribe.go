@@ -42,5 +42,6 @@ func (s *UpdateProductSubscribe) Subscribe() {
 			s.logger.Error("Error commit message", zap.Error(err))
 			continue
 		}
+		s.logger.Info("Decrease product quantity", zap.String("product_id", msg.ProductID))
 	}
 }

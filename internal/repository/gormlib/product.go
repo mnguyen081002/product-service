@@ -38,24 +38,21 @@ func (u productRepository) GetById(db *infrastructure.Database, ctx context.Cont
 	return
 }
 
-func (u productRepository) List(db *infrastructure.Database, ctx context.Context, input request.ListProductRequest) ([]*models.Product, *int64, error) {
+func (u productRepository) List(db *infrastructure.Database, ctx context.Context, input request.ListProductRequest) (products []*models.Product, total int64, err error) {
 	dbQuery := db.RDBMS.WithContext(ctx).Model(&models.Product{})
-	var res []*models.Product
-	if input.Search != "" {
-		dbQuery = dbQuery.Where("name ILIKE ?", "%"+input.Search+"%")
+	if input.Search != nil {
+		dbQuery = dbQuery.Where("name ILIKE ?", "%"+*input.Search+"%")
 	}
 
 	if input.Price != nil {
 		dbQuery = dbQuery.Where("price >= ?", input.Price)
 	}
 
-	total := new(int64)
-
-	err := GormQueryPagination(dbQuery, input.PageOptions, &res).Error()
+	err = GormQueryPagination(dbQuery, input.PageOptions, &products).Error()
 	if err != nil {
-		return nil, nil, errors.Cause(err)
+		return nil, 0, errors.Cause(err)
 	}
-	return res, total, nil
+	return products, total, nil
 }
 
 func (u productRepository) Update(db *infrastructure.Database, ctx context.Context, id string, updates map[string]interface{}) (err error) {

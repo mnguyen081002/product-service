@@ -2,11 +2,11 @@ package mongo
 
 import (
 	"context"
-	"productservice/internal/api/request"
-	"productservice/internal/infrastructure"
 	"github.com/pkg/errors"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
+	"productservice/internal/api/request"
+	"productservice/internal/infrastructure"
 )
 
 type MongoRepository struct {
@@ -62,9 +62,12 @@ func MongoQueryPagination[E any](collection *mongo.Collection, filter interface{
 		o.Limit = 10
 	}
 	offset := (o.Page - 1) * o.Limit
+
+	lm := int64(o.Limit)
+	skip := int64(offset)
 	c, err := q.collection.Find(context.Background(), filter, &options.FindOptions{
-		Limit: &o.Limit,
-		Skip:  &offset,
+		Limit: &lm,
+		Skip:  &skip,
 	})
 
 	if err != nil {

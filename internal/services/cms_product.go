@@ -55,10 +55,10 @@ func (a *cmsProductService) GetProductById(ctx context.Context, id string) (prod
 	return a.ufw.ProductRepository.GetById(&a.db, ctx, id)
 }
 
-func (a *cmsProductService) ListProduct(ctx context.Context, input request.ListProductRequest) (res []*models.Product, total *int64, err error) {
+func (a *cmsProductService) ListProduct(ctx context.Context, input request.ListProductRequest) (res []*models.Product, total int64, err error) {
 	list, total, err := a.ufw.ProductRepository.List(&a.db, ctx, input)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 	return list, total, nil
 }

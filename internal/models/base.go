@@ -13,11 +13,11 @@ const (
 )
 
 type BaseModel struct {
-	ID        uuid.UUID  `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" bson:"_id"`
-	UpdaterID *uuid.UUID `gorm:"column:updater_id;type:uuid;" bson:"updater_id"`
-	CreatedAt time.Time  `gorm:"column:created_at;type:timestamp;default:now();not null" bson:"created_at"`
-	UpdatedAt time.Time  `gorm:"column:updated_at;type:timestamp;default:now();not null" bson:"updated_at"`
-	DeletedAt *time.Time `gorm:"column:deleted_at;type:timestamp" bson:"deleted_at"`
+	ID        uuid.UUID  `gorm:"type:uuid;primary_key;default:uuid_generate_v4()" bson:"_id" json:"id"`
+	UpdaterID *uuid.UUID `gorm:"column:updater_id;type:uuid;" bson:"updater_id" json:"updater_id"`
+	CreatedAt time.Time  `gorm:"column:created_at;type:timestamp;default:now();not null" bson:"created_at" json:"created_at"`
+	UpdatedAt time.Time  `gorm:"column:updated_at;type:timestamp;default:now();not null" bson:"updated_at" json:"updated_at"`
+	DeletedAt *time.Time `gorm:"column:deleted_at;type:timestamp" bson:"deleted_at" json:"-"`
 }
 
 func (b *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {

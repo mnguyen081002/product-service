@@ -1,21 +1,23 @@
 package repository
 
 import (
+	"go.uber.org/fx"
 	"productservice/config"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
 	"productservice/internal/repository/gormlib"
 	"productservice/internal/repository/mongo"
-	"go.uber.org/fx"
 )
 
 type UnitOfWork struct {
-	ProductRepository domain.ProductRepository
+	ProductRepository  domain.ProductRepository
+	CategoryRepository domain.CategoryRepository
 }
 
 func NewUnitOfWorkGorm() *UnitOfWork {
 	return &UnitOfWork{
-		ProductRepository: gormlib.NewProductRepository(),
+		ProductRepository:  gormlib.NewProductRepository(),
+		CategoryRepository: gormlib.NewCategoryRepository(),
 	}
 }
 

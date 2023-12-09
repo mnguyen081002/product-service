@@ -1,12 +1,12 @@
 package controller
 
 import (
+	"errors"
+	"net/http"
 	"productservice/internal/api/request"
 	"productservice/internal/api/response"
 	"productservice/internal/api_errors"
 	utils2 "productservice/internal/utils"
-	"errors"
-	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -22,7 +22,7 @@ func Response(c *gin.Context, statusCode int, message string, data interface{}) 
 	})
 }
 
-func ResponseList(c *gin.Context, message string, total *int64, data interface{}) {
+func ResponseList(c *gin.Context, message string, total int64, data interface{}) {
 	var o request.PageOptions
 	if err := c.ShouldBindQuery(&o); err != nil {
 		ResponseValidationError(c, err)
@@ -37,7 +37,7 @@ func ResponseList(c *gin.Context, message string, total *int64, data interface{}
 		o.Page = 1
 	}
 
-	pageCount := utils2.GetPageCount(*total, o.Limit)
+	pageCount := utils2.GetPageCount(total, int64(o.Limit))
 	c.JSON(http.StatusOK, response.SimpleResponseList{
 		Message: message,
 		Data:    data,
