@@ -10,8 +10,8 @@ import (
 
 type ProductAttributes struct {
 	BaseModel  `bson:",inline"`
-	ProductID  uuid.UUID `json:"product_id" gorm:"column:product_id;type:uuid;not null"`
-	Atrributes Attribute `json:"attributes" gorm:"column:attributes;type:jsonb"`
+	ProductID  uuid.UUID      `json:"product_id" gorm:"column:product_id;type:uuid;not null"`
+	Atrributes ArrayAttribute `json:"attributes" gorm:"column:attributes;type:jsonb"`
 }
 
 type Attribute struct {
