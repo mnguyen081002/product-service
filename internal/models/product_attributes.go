@@ -8,21 +8,21 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-type ProductAttributes struct {
-	BaseModel  `bson:",inline"`
-	ProductID  uuid.UUID      `json:"product_id" gorm:"column:product_id;type:uuid;not null"`
-	Atrributes ArrayAttribute `json:"attributes" gorm:"column:attributes;type:jsonb"`
-}
+type ArrayAttribute []Attribute
 
 type Attribute struct {
 	Name   string `json:"name"`
 	Option string `json:"option"`
 }
 
-type ArrayAttribute []Attribute
+type ProductAttributes struct {
+	BaseModel  `bson:",inline"`
+	ProductID  uuid.UUID      `json:"product_id" gorm:"column:product_id;type:uuid;not null"`
+	Atrributes ArrayAttribute `json:"attributes" gorm:"column:attributes;type:jsonb"`
+}
 
 // Value Marshal
-func (a *ArrayAttribute) Value() (driver.Value, error) {
+func (a ArrayAttribute) Value() (driver.Value, error) {
 	return json.Marshal(a)
 }
 
