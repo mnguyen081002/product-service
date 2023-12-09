@@ -1,14 +1,15 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"net/http"
 	"productservice/internal/api/request"
 	"productservice/internal/domain"
 	"productservice/internal/messaging/message"
 	"productservice/internal/messaging/producer"
 	"productservice/internal/utils"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type CmsProductController struct {
@@ -29,7 +30,7 @@ func NewCmsProductController(authService domain.CmsProductService, logger *zap.L
 func (b *CmsProductController) CreateProduct(c *gin.Context) {
 	var req request.CreateProductRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		ResponseError(c, err)
+		ResponseValidationError(c, err)
 		return
 	}
 

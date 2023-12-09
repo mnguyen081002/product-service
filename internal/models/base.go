@@ -1,11 +1,12 @@
 package models
 
 import (
+	"productservice/internal/api_errors"
+	"time"
+
 	"github.com/pkg/errors"
 	uuid "github.com/satori/go.uuid"
 	"gorm.io/gorm"
-	"productservice/internal/api_errors"
-	"time"
 )
 
 const (

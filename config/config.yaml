@@ -21,7 +21,7 @@ database:
     timezone: 'Asia/Ho_Chi_Minh'
   postgres:
 #    host: '34.92.104.68'
-    host: 'localhost'
+    host: '192.168.1.235'
     port: '5432'
     username: 'postgres'
     password: 'postgres'
@@ -38,4 +38,4 @@ jwt:
   iss: 'iss'
 logger:
   level: 'debug'
-  enabled: false
+  enabled: true

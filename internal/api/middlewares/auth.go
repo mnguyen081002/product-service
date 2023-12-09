@@ -2,10 +2,11 @@ package middlewares
 
 import (
 	"context"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"productservice/internal/api/response"
 	"productservice/internal/api_errors"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (e *GinMiddleware) Auth(authorization bool) gin.HandlerFunc {
@@ -25,6 +26,7 @@ func (e *GinMiddleware) Auth(authorization bool) gin.HandlerFunc {
 		}
 
 		c.Request = c.Request.WithContext(context.WithValue(c.Request.Context(), "x-user-id", uid))
+
 		c.Next()
 	}
 }
