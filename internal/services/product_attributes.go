@@ -50,6 +50,14 @@ func (a *cmsProductAttributesService) CreateProductAttributes(ctx context.Contex
 
 // UpdateProductAttributes
 func (a *cmsProductAttributesService) UpdateProductAttributes(ctx context.Context, id string, req request.ProductAttributesUpdate) (err error) {
+
+	//check product attributes exist
+	_, err = a.ufw.ProductAttributesRepository.GetById(&a.db, ctx, id)
+
+	if err != nil {
+		return err
+	}
+
 	r := request.ConvertAttributeModel(req.Attributes)
 	ms, _ := json.Marshal(r)
 
