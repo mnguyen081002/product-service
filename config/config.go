@@ -20,6 +20,7 @@ type (
 		Database       Database `mapstructure:"database"`
 		Logger         Logger   `mapstructure:"logger"`
 		Jwt            Jwt      `mapstructure:"jwt"`
+		Kafka          Kafka    `mapstructure:"kafka"`
 	}
 
 	Server struct {
@@ -70,6 +71,12 @@ type (
 	}
 
 	Services struct {
+	}
+
+	Kafka struct {
+		Host   string `mapstructure:"host"`
+		Port   int    `mapstructure:"port"`
+		Enable bool   `mapstructure:"enable"`
 	}
 )
 

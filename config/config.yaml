@@ -39,3 +39,7 @@ jwt:
 logger:
   level: 'debug'
   enabled: false
+kafka:
+  host: 'localhost'
+  port: '9092'
+  enable: false

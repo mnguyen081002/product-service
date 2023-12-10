@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
 	"net/http"
+	"productservice/config"
 	"productservice/internal/api/request"
 	"productservice/internal/domain"
 	"productservice/internal/messaging/message"
@@ -15,13 +16,15 @@ type CmsProductController struct {
 	cmsProductService  domain.CmsProductService
 	cmsProductProducer producer.CmsProductProducer
 	logger             *zap.Logger
+	config             *config.Config
 }
 
-func NewCmsProductController(authService domain.CmsProductService, logger *zap.Logger, cmsProductProducer producer.CmsProductProducer) *CmsProductController {
+func NewCmsProductController(authService domain.CmsProductService, logger *zap.Logger, cmsProductProducer producer.CmsProductProducer, config *config.Config) *CmsProductController {
 	controller := &CmsProductController{
 		cmsProductService:  authService,
 		logger:             logger,
 		cmsProductProducer: cmsProductProducer,
+		config:             config,
 	}
 	return controller
 }
@@ -86,11 +89,15 @@ func (b *CmsProductController) DecreaseProductQuantity(c *gin.Context) {
 		return
 	}
 
-	err = b.cmsProductProducer.DecreaseProductQuantity(c.Request.Context(), message.DecreaseProductQuantity{
-		ProductID: id,
-		Quantity:  req.Quantity,
-		UserID:    uid.String(),
-	})
+	if b.config.Kafka.Enable {
+		err = b.cmsProductProducer.DecreaseProductQuantity(c.Request.Context(), message.DecreaseProductQuantity{
+			ProductID: id,
+			Quantity:  req.Quantity,
+			UserID:    uid.String(),
+		})
+	} else {
+		err = b.cmsProductService.DecreaseProductQuantity(c.Request.Context(), id, req.Quantity)
+	}
 
 	if err != nil {
 		ResponseError(c, err)
