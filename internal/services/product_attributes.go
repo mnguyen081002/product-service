@@ -46,3 +46,16 @@ func (a *cmsProductAttributesService) CreateProductAttributes(ctx context.Contex
 		Atrributes: req.ConvertAttributeModel(),
 	})
 }
+
+// UpdateProductAttributes
+func (a *cmsProductAttributesService) UpdateProductAttributes(ctx context.Context, id string, req request.ProductAttributesUpdate) (err error) {
+	updates := map[string][]models.Attribute{
+		"attributes": req.ConvertAttributeModel(),
+	}
+	return a.ufw.ProductAttributesRepository.Update(&a.db, ctx, id, updates)
+}
+
+// GetProductAttributesById
+func (a *cmsProductAttributesService) GetProductAttributesById(ctx context.Context, id string) (productAttributes *models.ProductAttributes, err error) {
+	return a.ufw.ProductAttributesRepository.GetById(&a.db, ctx, id)
+}
