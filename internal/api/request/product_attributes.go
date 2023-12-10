@@ -16,12 +16,8 @@ type Attribute struct {
 	Option string `json:"option" validate:"required"`
 }
 
-func (a *ProductAttributesCreate) ConvertAttributeModel() []models.Attribute {
-	return convertAttributes(a.Attributes)
-}
-
-func (a *ProductAttributesUpdate) ConvertAttributeModel() []models.Attribute {
-	return convertAttributes(a.Attributes)
+func ConvertAttributeModel(a []Attribute) []models.Attribute {
+	return convertAttributes(a)
 }
 
 func convertAttributes(attributes []Attribute) []models.Attribute {

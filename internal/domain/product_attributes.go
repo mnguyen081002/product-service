@@ -9,7 +9,7 @@ import (
 
 type ProductAttributesRepository interface {
 	Create(db *infrastructure.Database, ctx context.Context, productAttributes *models.ProductAttributes) (res *models.ProductAttributes, err error)
-	Update(db *infrastructure.Database, ctx context.Context, id string, updates map[string][]models.Attribute) (err error)
+	Update(db *infrastructure.Database, ctx context.Context, id string, updates map[string]interface{}) (err error)
 	GetById(db *infrastructure.Database, ctx context.Context, id string) (res *models.ProductAttributes, err error)
 	// List(db *infrastructure.Database, ctx context.Context, input request.ListProductRequest) ([]*models.ProductAttributes, *int64, error)
 }

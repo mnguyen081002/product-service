@@ -26,7 +26,7 @@ func (u productAttributesRepository) Create(db *infrastructure.Database, ctx con
 }
 
 // Update
-func (u productAttributesRepository) Update(db *infrastructure.Database, ctx context.Context, id string, updates map[string][]models.Attribute) (err error) {
+func (u productAttributesRepository) Update(db *infrastructure.Database, ctx context.Context, id string, updates map[string]interface{}) (err error) {
 	fmt.Println("updates", updates, "id", id)
 	if err := db.RDBMS.WithContext(ctx).Model(&models.ProductAttributes{}).Where("id = ?", id).Updates(updates).Error; err != nil {
 		return errors.WithStack(err)

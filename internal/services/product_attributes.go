@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"productservice/config"
 	"productservice/internal/api/request"
 	"productservice/internal/domain"
@@ -43,14 +44,17 @@ func NewCmsProductAttributesService(
 func (a *cmsProductAttributesService) CreateProductAttributes(ctx context.Context, req request.ProductAttributesCreate) (productAttributes *models.ProductAttributes, err error) {
 	return a.ufw.ProductAttributesRepository.Create(&a.db, ctx, &models.ProductAttributes{
 		ProductID:  uuid.FromStringOrNil(req.ProductID),
-		Atrributes: req.ConvertAttributeModel(),
+		Atrributes: request.ConvertAttributeModel(req.Attributes),
 	})
 }
 
 // UpdateProductAttributes
 func (a *cmsProductAttributesService) UpdateProductAttributes(ctx context.Context, id string, req request.ProductAttributesUpdate) (err error) {
-	updates := map[string][]models.Attribute{
-		"attributes": req.ConvertAttributeModel(),
+	r := request.ConvertAttributeModel(req.Attributes)
+	ms, _ := json.Marshal(r)
+
+	updates := map[string]interface{}{
+		"attributes": ms,
 	}
 	return a.ufw.ProductAttributesRepository.Update(&a.db, ctx, id, updates)
 }
