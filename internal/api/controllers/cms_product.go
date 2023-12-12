@@ -32,7 +32,7 @@ func NewCmsProductController(authService domain.CmsProductService, logger *zap.L
 func (b *CmsProductController) CreateProduct(c *gin.Context) {
 	var req request.CreateProductRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		ResponseError(c, err)
+		ResponseValidationError(c, err)
 		return
 	}
 
@@ -48,7 +48,7 @@ func (b *CmsProductController) CreateProduct(c *gin.Context) {
 func (b *CmsProductController) GetProductById(c *gin.Context) {
 	id := c.Param("id")
 
-	p, err := b.cmsProductService.GetProductById(c.Request.Context(), id)
+	p, err := b.cmsProductService.GetProductByID(c.Request.Context(), id)
 
 	if err != nil {
 		ResponseError(c, err)

@@ -1,26 +1,14 @@
 package main
 
 import (
-	"context"
 	"go.uber.org/zap"
-	config2 "productservice/config"
 	"productservice/internal/api/request"
-	"productservice/internal/infrastructure"
-	"productservice/internal/lib"
 	"productservice/internal/messaging/message"
 	"productservice/internal/messaging/subscriber"
 	"sync"
 	"testing"
 	"time"
 )
-
-func setup() {
-	config = config2.NewConfig("/../config/config.yaml")()
-	logger = lib.NewZapLogger(config)
-	db = infrastructure.NewDatabase(config, logger)
-
-	ctx = context.WithValue(context.Background(), "x-user-id", "ee564790-1e10-43a0-9968-78dda6496ff9")
-}
 
 func TestDecreaseProductQuantityCurrency(t *testing.T) {
 	p, err := cmsProductService.CreateProduct(ctx, request.CreateProductRequest{
@@ -35,7 +23,7 @@ func TestDecreaseProductQuantityCurrency(t *testing.T) {
 	}
 	wg := sync.WaitGroup{}
 	wg.Add(2)
-	subscriber.NewUpdateProductSubscribe(cmsProductService, logger)
+	subscriber.NewUpdateProductSubscribe(cmsProductService, logger, config)
 	userID := ctx.Value("x-user-id").(string)
 	for i := 0; i < 2; i++ {
 		go func() {
@@ -56,7 +44,7 @@ func TestDecreaseProductQuantityCurrency(t *testing.T) {
 
 	wg.Wait()
 	time.Sleep(4 * time.Second) // wait for update product
-	r, err := cmsProductService.GetProductById(ctx, p.ID.String())
+	r, err := cmsProductService.GetProductByID(ctx, p.ID.String())
 	if err != nil {
 		t.Errorf("Error get product by id %+v", err)
 	}

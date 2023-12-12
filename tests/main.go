@@ -23,6 +23,7 @@ var (
 	cmsProductService  domain.CmsProductService
 	cmsProductProducer producer.CmsProductProducer
 	ufw                *repository.UnitOfWork
+	userId             = "ee564790-1e10-43a0-9968-78dda6496ff9"
 )
 
 func SetUp() {
@@ -36,5 +37,5 @@ func SetUp() {
 
 	kafkaProducer := infrastructure.NewKafkaProducer()
 	cmsProductProducer = producer.NewCmsProductProducer(kafkaProducer, logger)
-	ctx = context.WithValue(context.Background(), "x-user-id", "ee564790-1e10-43a0-9968-78dda6496ff9")
+	ctx = context.WithValue(context.Background(), "x-user-id", userId)
 }

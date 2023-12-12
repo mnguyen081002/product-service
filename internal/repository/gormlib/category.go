@@ -89,3 +89,10 @@ func (u categoryRepository) ListCategories(db *infrastructure.Database, ctx cont
 	}
 	return categories, total, nil
 }
+
+func (u categoryRepository) GetProductCategories(db *infrastructure.Database, ctx context.Context, productID uuid.UUID) (categories []*models.Category, err error) {
+	if err = db.RDBMS.WithContext(ctx).Model(&models.Category{}).Joins("JOIN product_categories ON product_categories.category_id = categories.id").Where("product_categories.product_id = ?", productID).Find(&categories).Error; err != nil {
+		return nil, errors.Cause(err)
+	}
+	return categories, nil
+}

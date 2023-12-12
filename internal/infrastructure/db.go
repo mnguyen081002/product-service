@@ -119,6 +119,7 @@ func (d Database) RegisterTables() {
 	err := d.RDBMS.AutoMigrate(
 		models.Product{},
 		models.Category{},
+		models.Rating{},
 	)
 
 	if err != nil {
