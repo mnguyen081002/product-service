@@ -2,14 +2,15 @@ package gormlib
 
 import (
 	"context"
-	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"productservice/internal/api/request"
 	"productservice/internal/api_errors"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
 	"productservice/internal/models"
 	"productservice/internal/utils"
+
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 type productRepository struct {
@@ -29,6 +30,7 @@ func (u productRepository) Create(db *infrastructure.Database, ctx context.Conte
 }
 
 func (u productRepository) GetById(db *infrastructure.Database, ctx context.Context, id string) (res *models.Product, err error) {
+
 	if err := db.RDBMS.WithContext(ctx).First(&res, "id = ?", id).Error; err != nil {
 		if utils.ErrNoRows(err) {
 			return nil, errors.New(api_errors.ErrProductNotFound)

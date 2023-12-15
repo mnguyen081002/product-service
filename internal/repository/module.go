@@ -13,12 +13,16 @@ import (
 type UnitOfWork struct {
 	ProductRepository           domain.ProductRepository
 	ProductAttributesRepository domain.ProductAttributesRepository
+	TierVariationRepository     domain.TierVariationRepository
+	ProductModelRepository      domain.ProductModelRepository
 }
 
 func NewUnitOfWorkGorm() *UnitOfWork {
 	return &UnitOfWork{
 		ProductRepository:           gormlib.NewProductRepository(),
 		ProductAttributesRepository: gormlib.NewProductAttributesRepository(),
+		TierVariationRepository:     gormlib.NewTierVariationRepository(),
+		ProductModelRepository:      gormlib.NewProductModelRepository(),
 	}
 }
 

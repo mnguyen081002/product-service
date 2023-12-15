@@ -15,3 +15,5 @@
 # vendor/
 
 .idea
+config/confign.yaml
+config/configt.yaml

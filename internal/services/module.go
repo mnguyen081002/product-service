@@ -5,4 +5,6 @@ import "go.uber.org/fx"
 var Module = fx.Provide(
 	NewCmsProductService,
 	NewCmsProductAttributesService,
+	NewTierVariationService,
+	NewProductModel,
 )

@@ -22,7 +22,7 @@ type Product struct {
 	Rating       []Rating          `json:"rating" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
 	Product_attr ProductAttributes `json:"product_attr" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
 	TierVar      []TierVariations  `json:"tier_var" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
-	ProductModel []ProductModel    `json:"models" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
+	ProductModel ProductModels     `json:"models" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
 }
 
 func (u *Product) MarshalBSON() ([]byte, error) {
