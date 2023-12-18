@@ -29,6 +29,7 @@ func (u productModelRepository) Create(db *infrastructure.Database, ctx context.
 
 // BulkCreate
 func (u productModelRepository) BulkCreate(db *infrastructure.Database, ctx context.Context, productModels []*models.ProductModel) (res []*models.ProductModel, err error) {
+
 	if err := db.RDBMS.WithContext(ctx).Create(&productModels).Error; err != nil {
 		return nil, errors.Cause(err)
 	}
@@ -75,4 +76,13 @@ func (u productModelRepository) BulkDeleteByProductIdAndItemIndex(db *infrastruc
 	}
 
 	return nil
+}
+
+// GetListByProductId
+func (u productModelRepository) GetListByProductId(db *infrastructure.Database, ctx context.Context, productID string) (res []*models.ProductModel, err error) {
+	if err := db.RDBMS.WithContext(ctx).Where("product_id = ?", productID).Find(&res).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return res, nil
 }

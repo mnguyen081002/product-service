@@ -4,4 +4,4 @@ import (
 	"go.uber.org/fx"
 )
 
-var Module = fx.Options(fx.Provide(NewCmsRoutes), fx.Invoke(NewCmsProductRoutes, NewCmsProductAttributesRoutes, NewHealthRoutes, NewTierVariationRoutes))
+var Module = fx.Options(fx.Provide(NewCmsRoutes), fx.Invoke(NewCmsProductRoutes, NewCmsProductAttributesRoutes, NewHealthRoutes, NewTierVariationRoutes, NewProductModelsRoutes))

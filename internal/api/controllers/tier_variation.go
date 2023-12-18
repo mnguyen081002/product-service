@@ -48,7 +48,7 @@ func (controller *TierVariationController) UpdateTierVariation(ctx *gin.Context)
 		ResponseValidationError(ctx, err)
 		return
 	}
-	id := ctx.Param("id")
+	id := ctx.Param("product_id")
 
 	err = controller.TierVariationService.UpdateTierVariationOptions(ctx.Request.Context(), request, id)
 	if err != nil {
@@ -75,4 +75,17 @@ func (controller *TierVariationController) DeleteTierVariationOptions(ctx *gin.C
 	}
 
 	Response(ctx, http.StatusOK, "success", nil)
+}
+
+// GetTierVariationByProductID
+func (controller *TierVariationController) GetTierVariationByProductID(ctx *gin.Context) {
+	id := ctx.Param("product_id")
+
+	data, err := controller.TierVariationService.GetByProductID(ctx.Request.Context(), id)
+	if err != nil {
+		ResponseError(ctx, err)
+		return
+	}
+
+	Response(ctx, http.StatusOK, "success", data)
 }

@@ -39,10 +39,20 @@ func NewProductModel(
 	}
 }
 
-func (a *productModelService) InitProductModel(ctx context.Context, req request.TierVariationCreate) (productAttributes *models.ProductModel, err error) {
-
-	a.ufw.ProductModelRepository.BulkCreate(&a.db, ctx, request.ToArrayProductModel(req.Variations, req.ProductID))
+func (a *productModelService) CreateProductModels(ctx context.Context, req request.TierVariationCreate) (productAttributes *models.ProductModel, err error) {
+	_, err = a.ufw.ProductModelRepository.BulkCreate(&a.db, ctx, request.ToArrayProductModel(req.Variations, req.ProductID))
+	if err != nil {
+		return nil, err
+	}
 
 	return productAttributes, nil
+}
 
+func (a *productModelService) GetListByProductId(ctx context.Context, productID string) (res []*models.ProductModel, err error) {
+	res, err = a.ufw.ProductModelRepository.GetListByProductId(&a.db, ctx, productID)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
 }

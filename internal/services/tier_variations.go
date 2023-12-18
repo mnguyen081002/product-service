@@ -46,18 +46,36 @@ func (a *tierVariationService) CreateTierVariation(ctx context.Context, req requ
 
 	arrModels := request.ToArrayProductModel(req.Variations, req.ProductID)
 
-	a.ufw.ProductModelRepository.BulkCreate(&a.db, ctx, arrModels)
+	err = a.dbTransaction.WithTransaction(func(tx *infrastructure.Database) error {
 
-	return a.ufw.TierVariationRepository.Create(&a.db, ctx, &models.TierVariations{
-		ProductID: uuid.FromStringOrNil(req.ProductID),
-		Options:   request.ToOptionsTierVar(req.Variations),
+		tierVar, err = a.ufw.TierVariationRepository.Create(tx, ctx, &models.TierVariations{
+			ProductID: uuid.FromStringOrNil(req.ProductID),
+			Options:   request.ToOptionsTierVar(req.Variations),
+		})
+
+		if err != nil {
+			return err
+		}
+
+		_, err = a.ufw.ProductModelRepository.BulkCreate(tx, ctx, arrModels)
+
+		if err != nil {
+			return err
+		}
+
+		return nil
 	})
+
+	if err != nil {
+		return tierVar, err
+	}
+
+	return tierVar, err
 }
 
 // UpdateProductAttributes
 func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, req request.TierVariationUpdate, id string) (err error) {
-
-	t, err := a.ufw.TierVariationRepository.GetById(&a.db, ctx, id)
+	t, err := a.ufw.TierVariationRepository.GetByProductID(&a.db, ctx, id)
 
 	if err != nil {
 		return err
@@ -80,20 +98,26 @@ func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, r
 				Options: v.Options,
 			})
 		}
-
 	}
 
-	err = a.ufw.TierVariationRepository.Update(&a.db, ctx, map[string]interface{}{
-		"options": t.Options,
-	}, id)
+	err = a.dbTransaction.WithTransaction(func(tx *infrastructure.Database) error {
 
-	if err != nil {
-		return err
-	}
+		err = a.ufw.TierVariationRepository.UpdateByProductId(tx, ctx, map[string]interface{}{
+			"options": t.Options,
+		}, id)
 
-	fmt.Println(arrTierVal)
+		if err != nil {
+			return err
+		}
 
-	_, err = a.ufw.ProductModelRepository.BulkCreate(&a.db, ctx, request.ToArrayProductModelUpdate(arrTierVal, t.ProductID.String(), len(t.Options)-1))
+		_, err = a.ufw.ProductModelRepository.BulkCreate(tx, ctx, request.ToArrayProductModelUpdate(arrTierVal, t.ProductID.String(), len(t.Options)-1))
+
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
 
 	if err != nil {
 		return err
@@ -105,7 +129,7 @@ func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, r
 // DeleteTierVariationOptions
 func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, req request.TierVariationDelete, id string) (err error) {
 
-	t, err := a.ufw.TierVariationRepository.GetById(&a.db, ctx, id)
+	t, err := a.ufw.TierVariationRepository.GetByProductID(&a.db, ctx, id)
 
 	if err != nil {
 		return err
@@ -124,18 +148,32 @@ func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, r
 
 	}
 
-	err = a.ufw.TierVariationRepository.Update(&a.db, ctx, map[string]interface{}{
-		"options": t.Options,
-	}, id)
+	err = a.dbTransaction.WithTransaction(func(tx *infrastructure.Database) error {
 
-	if err != nil {
-		return err
-	}
+		err = a.ufw.TierVariationRepository.UpdateByProductId(tx, ctx, map[string]interface{}{
+			"options": t.Options,
+		}, id)
 
-	err = a.ufw.ProductModelRepository.BulkDeleteByProductIdAndItemIndex(&a.db, ctx, req.ProductID, fmt.Sprintf("%d", posEleDel), req.ID)
+		if err != nil {
+			return err
+		}
+
+		err = a.ufw.ProductModelRepository.BulkDeleteByProductIdAndItemIndex(&a.db, ctx, req.ProductID, fmt.Sprintf("%d", posEleDel), req.ID)
+		if err != nil {
+			return err
+		}
+
+		return nil
+	})
+
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+// GetByProductID
+func (a *tierVariationService) GetByProductID(ctx context.Context, id string) (res *models.TierVariations, err error) {
+	return a.ufw.TierVariationRepository.GetByProductID(&a.db, ctx, id)
 }

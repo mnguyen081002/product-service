@@ -13,8 +13,10 @@ type ProductModelRepository interface {
 	Update(db *infrastructure.Database, ctx context.Context, id string, updates map[string]interface{}) (err error)
 	CountWithCondition(db *infrastructure.Database, ctx context.Context, condition map[string]interface{}) (count int64, err error)
 	BulkDeleteByProductIdAndItemIndex(db *infrastructure.Database, ctx context.Context, productID string, firstChar string, optionsID int) (err error)
+	GetListByProductId(db *infrastructure.Database, ctx context.Context, productID string) (res []*models.ProductModel, err error)
 }
 
 type ProductModelService interface {
-	InitProductModel(ctx context.Context, req request.TierVariationCreate) (productModel *models.ProductModel, err error)
+	CreateProductModels(ctx context.Context, req request.TierVariationCreate) (productModel *models.ProductModel, err error)
+	GetListByProductId(ctx context.Context, productID string) (res []*models.ProductModel, err error)
 }
