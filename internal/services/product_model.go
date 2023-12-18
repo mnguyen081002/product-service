@@ -10,7 +10,6 @@ import (
 	"productservice/internal/repository"
 	"sync"
 
-	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
@@ -40,14 +39,9 @@ func NewProductModel(
 	}
 }
 
-func (a *productModelService) InitProductModel(ctx context.Context, req request.TierVariationCreate) (productAttributes *models.ProductModels, err error) {
+func (a *productModelService) InitProductModel(ctx context.Context, req request.TierVariationCreate) (productAttributes *models.ProductModel, err error) {
 
-	for _, p := range req.ToArrayProductModel() {
-		a.ufw.ProductModelRepository.Create(&a.db, ctx, &models.ProductModels{
-			ProductID: uuid.FromStringOrNil(req.ProductID),
-			Models:    p,
-		})
-	}
+	a.ufw.ProductModelRepository.BulkCreate(&a.db, ctx, request.ToArrayProductModel(req.Variations, req.ProductID))
 
 	return productAttributes, nil
 

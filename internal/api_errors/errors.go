@@ -13,6 +13,8 @@ var (
 	ErrQuantityNotEnough          = "10007"
 	ErrIdNotFound                 = "10008"
 	ErrProductAttributesNotFound  = "10009"
+	ErrTierVariationNotFound      = "10010"
+	ErrDeleteFailed               = "10011"
 )
 
 type MessageAndStatus struct {
@@ -31,4 +33,6 @@ var MapErrorCodeMessage = map[string]MessageAndStatus{
 	ErrQuantityNotEnough:          {"Quantity not enough", http.StatusBadRequest},
 	ErrIdNotFound:                 {"Invalid id", http.StatusBadRequest},
 	ErrProductAttributesNotFound:  {"Product Attributes not found", http.StatusBadRequest},
+	ErrTierVariationNotFound:      {"Tier Variation not found", http.StatusBadRequest},
+	ErrDeleteFailed:               {"Delete Failed", http.StatusInternalServerError},
 }

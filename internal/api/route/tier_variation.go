@@ -11,6 +11,7 @@ func NewTierVariationRoutes(c *CmsGroupRoutes, controller *controller.TierVariat
 	gr := c.g.Group("/product/tier_variation")
 	gr.POST("", controller.CreaTierVariation)
 	gr.PUT("/options/:id", controller.UpdateTierVariation)
+	gr.DELETE("/options/:id", controller.DeleteTierVariationOptions)
 
 	return &TierVariation{}
 }

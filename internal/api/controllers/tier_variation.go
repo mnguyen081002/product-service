@@ -58,3 +58,21 @@ func (controller *TierVariationController) UpdateTierVariation(ctx *gin.Context)
 
 	Response(ctx, http.StatusOK, "success", nil)
 }
+
+func (controller *TierVariationController) DeleteTierVariationOptions(ctx *gin.Context) {
+	var request request.TierVariationDelete
+	err := ctx.ShouldBindJSON(&request)
+	if err != nil {
+		ResponseValidationError(ctx, err)
+		return
+	}
+	id := ctx.Param("id")
+
+	err = controller.TierVariationService.DeleteTierVariationOptions(ctx.Request.Context(), request, id)
+	if err != nil {
+		ResponseError(ctx, err)
+		return
+	}
+
+	Response(ctx, http.StatusOK, "success", nil)
+}

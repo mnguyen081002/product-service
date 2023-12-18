@@ -120,7 +120,7 @@ func (d Database) RegisterTables() {
 		models.Category{},
 		models.Product{},
 		models.ProductAttributes{},
-		models.ProductModels{},
+		models.ProductModel{},
 		models.Rating{},
 		models.TierVariations{},
 	)
