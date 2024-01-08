@@ -24,8 +24,8 @@ func NewTierVariationController(authService domain.TierVariationService, logger 
 	return controller
 }
 
-func (controller *TierVariationController) CreaTierVariation(ctx *gin.Context) {
-	var request request.TierVariationCreate
+func (controller *TierVariationController) CreateTierVariation(ctx *gin.Context) {
+	var request request.CreateTierVariation
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
 		ResponseValidationError(ctx, err)
@@ -42,7 +42,7 @@ func (controller *TierVariationController) CreaTierVariation(ctx *gin.Context) {
 }
 
 func (controller *TierVariationController) UpdateTierVariation(ctx *gin.Context) {
-	var request request.TierVariationUpdate
+	var request request.UpdateTierVariation
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
 		ResponseValidationError(ctx, err)
@@ -60,15 +60,14 @@ func (controller *TierVariationController) UpdateTierVariation(ctx *gin.Context)
 }
 
 func (controller *TierVariationController) DeleteTierVariationOptions(ctx *gin.Context) {
-	var request request.TierVariationDelete
+	var request request.DeleteTierVariation
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
 		ResponseValidationError(ctx, err)
 		return
 	}
-	id := ctx.Param("id")
 
-	err = controller.TierVariationService.DeleteTierVariationOptions(ctx.Request.Context(), request, id)
+	err = controller.TierVariationService.DeleteTierVariationOptions(ctx.Request.Context(), request)
 	if err != nil {
 		ResponseError(ctx, err)
 		return

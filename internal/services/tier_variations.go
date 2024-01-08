@@ -42,7 +42,7 @@ func NewTierVariationService(
 	}
 }
 
-func (a *tierVariationService) CreateTierVariation(ctx context.Context, req request.TierVariationCreate) (tierVar *models.TierVariations, err error) {
+func (a *tierVariationService) CreateTierVariation(ctx context.Context, req request.CreateTierVariation) (tierVar *models.TierVariations, err error) {
 
 	arrModels := request.ToArrayProductModel(req.Variations, req.ProductID)
 
@@ -74,7 +74,7 @@ func (a *tierVariationService) CreateTierVariation(ctx context.Context, req requ
 }
 
 // UpdateProductAttributes
-func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, req request.TierVariationUpdate, id string) (err error) {
+func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, req request.UpdateTierVariation, id string) (err error) {
 	t, err := a.ufw.TierVariationRepository.GetByProductID(&a.db, ctx, id)
 
 	if err != nil {
@@ -110,7 +110,9 @@ func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, r
 			return err
 		}
 
-		_, err = a.ufw.ProductModelRepository.BulkCreate(tx, ctx, request.ToArrayProductModelUpdate(arrTierVal, t.ProductID.String(), len(t.Options)-1))
+		lenProductModelsUpdate := models.GetLengthOptions(t.Options, req.ID) - 1
+
+		_, err = a.ufw.ProductModelRepository.BulkCreate(tx, ctx, request.ToArrayProductModelUpdate(arrTierVal, t.ProductID.String(), lenProductModelsUpdate))
 
 		if err != nil {
 			return err
@@ -127,7 +129,9 @@ func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, r
 }
 
 // DeleteTierVariationOptions
-func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, req request.TierVariationDelete, id string) (err error) {
+func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, req request.DeleteTierVariation) (err error) {
+
+	id := req.ProductID
 
 	t, err := a.ufw.TierVariationRepository.GetByProductID(&a.db, ctx, id)
 
@@ -158,7 +162,7 @@ func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, r
 			return err
 		}
 
-		err = a.ufw.ProductModelRepository.BulkDeleteByProductIdAndItemIndex(&a.db, ctx, req.ProductID, fmt.Sprintf("%d", posEleDel), req.ID)
+		err = a.ufw.ProductModelRepository.BulkDeleteByProductIdAndItemIndex(tx, ctx, req.ProductID, fmt.Sprintf("%d", posEleDel), req.ID)
 		if err != nil {
 			return err
 		}

@@ -7,17 +7,17 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-type TierVariationCreate struct {
+type CreateTierVariation struct {
 	ProductID  string      `json:"product_id" validate:"required"`
 	Variations []Variation `json:"variations" validate:"required"`
 }
 
-type TierVariationUpdate struct {
+type UpdateTierVariation struct {
 	ID      int      `json:"id" validate:"required"`
 	Options []string `json:"options" validate:"required"`
 }
 
-type TierVariationDelete struct {
+type DeleteTierVariation struct {
 	ID        int      `json:"id" validate:"required"`
 	ProductID string   `json:"product_id" validate:"required"`
 	Options   []string `json:"options" validate:"required"`
@@ -70,25 +70,37 @@ func ToArrayProductModel(a []Variation, productID string) []*models.ProductModel
 // Convert array []models.Variation to array []models.ArrayProductModel
 func ToArrayProductModelUpdate(a []Variation, productID string, lenArr int) []*models.ProductModel {
 	var modelsOut = make([]*models.ProductModel, 0)
-	init := 0
 
 	ProductID := uuid.FromStringOrNil(productID)
 
-	for {
-		if init+1 >= len(a) {
-			break
-		}
+	// init := 0
+	// for {
+	// 	if init+1 >= len(a) {
+	// 		break
+	// 	}
 
-		for _, v := range a[init].Options {
-			for i2, v2 := range a[init+1].Options {
-				modelsOut = append(modelsOut, &models.ProductModel{
-					ProductID: ProductID,
-					Name:      v + "," + v2,
-					TierIndex: fmt.Sprintf("%d%d", lenArr+1, i2),
-				})
+	// 	for _, v := range a[init].Options {
+	// 		for i2, v2 := range a[init+1].Options {
+	// 			modelsOut = append(modelsOut, &models.ProductModel{
+	// 				ProductID: ProductID,
+	// 				Name:      v + "," + v2,
+	// 				TierIndex: fmt.Sprintf("%d%d", lenArr+1, i2),
+	// 			})
+	// 		}
+	// 	}
+	// 	init++
+	// }
+
+	for i, v := range a[0].Options {
+		for _, v2 := range a[1].Options {
+			t := &models.ProductModel{
+				ProductID: ProductID,
+				Name:      v + "," + v2,
+				TierIndex: fmt.Sprintf("%d%d", i, lenArr),
 			}
+
+			modelsOut = append(modelsOut, t)
 		}
-		init++
 	}
 
 	return modelsOut

@@ -20,6 +20,17 @@ type TierVariations struct {
 	Options   ArrayVariation `json:"options" gorm:"column:options;type:jsonb;not null" bson:"-"`
 }
 
+// get length of array options based on id
+func GetLengthOptions(a []Variation, id int) int {
+	for _, v := range a {
+		if v.ID == id {
+			return len(v.Options)
+		}
+	}
+
+	return 0
+}
+
 type ArrayVariation []Variation
 
 // Value Marshal

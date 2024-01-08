@@ -39,7 +39,7 @@ func NewProductModel(
 	}
 }
 
-func (a *productModelService) CreateProductModels(ctx context.Context, req request.TierVariationCreate) (productAttributes *models.ProductModel, err error) {
+func (a *productModelService) CreateProductModels(ctx context.Context, req request.CreateTierVariation) (productAttributes *models.ProductModel, err error) {
 	_, err = a.ufw.ProductModelRepository.BulkCreate(&a.db, ctx, request.ToArrayProductModel(req.Variations, req.ProductID))
 	if err != nil {
 		return nil, err

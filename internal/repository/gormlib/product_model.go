@@ -46,18 +46,10 @@ func (u productModelRepository) Update(db *infrastructure.Database, ctx context.
 	return nil
 }
 
-// CountWithCondition
-func (u productModelRepository) CountWithCondition(db *infrastructure.Database, ctx context.Context, condition map[string]interface{}) (count int64, err error) {
-
-	if err := db.RDBMS.WithContext(ctx).Model(&models.ProductModel{}).Where(condition).Count(&count).Error; err != nil {
-		return 0, errors.WithStack(err)
-	}
-
-	return count, nil
-}
-
 // BulkDeleteWithCondition
 func (u productModelRepository) BulkDeleteByProductIdAndItemIndex(db *infrastructure.Database, ctx context.Context, productID string, firstChar string, optionID int) (err error) {
+	fmt.Println("id", productID, firstChar, optionID)
+
 	likeCondition := "%" + firstChar
 	if optionID == 0 {
 		likeCondition = firstChar + "%"

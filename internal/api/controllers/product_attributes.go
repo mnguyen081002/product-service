@@ -48,7 +48,7 @@ func (controller *ProductAttributesController) CreateProductAttribute(ctx *gin.C
 func (controller *ProductAttributesController) UpdateProductAttribute(ctx *gin.Context) {
 	id := ctx.Param("id")
 
-	if utils.IsValidUUID(id) == false {
+	if !utils.IsValidUUID(id) {
 		ResponseError(ctx, errors.New(api_errors.ErrIdNotFound))
 		return
 	}
@@ -61,13 +61,13 @@ func (controller *ProductAttributesController) UpdateProductAttribute(ctx *gin.C
 	}
 
 	// check if product attribute exist
-	p, err := controller.cmsProductAttributesService.GetProductAttributesById(ctx.Request.Context(), id)
+	_, err = controller.cmsProductAttributesService.GetProductAttributesById(ctx.Request.Context(), id)
 	if err != nil {
 		ResponseError(ctx, err)
 		return
 	}
 
-	if p == nil {
+	if utils.ErrNoRows(err) {
 		ResponseError(ctx, errors.New(api_errors.ErrProductAttributesNotFound))
 		return
 	}
