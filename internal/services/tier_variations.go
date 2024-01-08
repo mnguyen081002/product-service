@@ -85,19 +85,14 @@ func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, r
 
 	for i, v := range t.Options {
 		if v.ID == req.ID {
-			arrTierVal = append(arrTierVal, request.Variation{
-				Name:    v.Name,
-				Options: req.Options,
-			})
 			for _, opt := range req.Options {
 				t.Options[i].Options = append(t.Options[i].Options, opt)
 			}
-		} else {
-			arrTierVal = append(arrTierVal, request.Variation{
-				Name:    v.Name,
-				Options: v.Options,
-			})
 		}
+		arrTierVal = append(arrTierVal, request.Variation{
+			Name:    v.Name,
+			Options: v.Options,
+		})
 	}
 
 	err = a.dbTransaction.WithTransaction(func(tx *infrastructure.Database) error {
