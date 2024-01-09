@@ -1,8 +1,6 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"net/http"
 	"productservice/config"
 	"productservice/internal/api/request"
@@ -10,6 +8,9 @@ import (
 	"productservice/internal/messaging/message"
 	"productservice/internal/messaging/producer"
 	"productservice/internal/utils"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type CmsProductController struct {

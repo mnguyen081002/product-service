@@ -1,25 +1,32 @@
 package repository
 
 import (
-	"go.uber.org/fx"
 	"productservice/config"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
 	"productservice/internal/repository/gormlib"
 	"productservice/internal/repository/mongo"
+
+	"go.uber.org/fx"
 )
 
 type UnitOfWork struct {
-	ProductRepository  domain.ProductRepository
-	CategoryRepository domain.CategoryRepository
-	RatingRepository   domain.RatingRepository
+	ProductAttributesRepository domain.ProductAttributesRepository
+	TierVariationRepository     domain.TierVariationRepository
+	ProductModelRepository      domain.ProductModelRepository
+	ProductRepository           domain.ProductRepository
+	CategoryRepository          domain.CategoryRepository
+	RatingRepository            domain.RatingRepository
 }
 
 func NewUnitOfWorkGorm() *UnitOfWork {
 	return &UnitOfWork{
-		ProductRepository:  gormlib.NewProductRepository(),
-		CategoryRepository: gormlib.NewCategoryRepository(),
-		RatingRepository:   gormlib.NewRatingRepository(),
+		ProductRepository:           gormlib.NewProductRepository(),
+		ProductAttributesRepository: gormlib.NewProductAttributesRepository(),
+		TierVariationRepository:     gormlib.NewTierVariationRepository(),
+		ProductModelRepository:      gormlib.NewProductModelRepository(),
+		CategoryRepository:          gormlib.NewCategoryRepository(),
+		RatingRepository:            gormlib.NewRatingRepository(),
 	}
 }
 

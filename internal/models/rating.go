@@ -1,10 +1,11 @@
 package models
 
 import (
+	"time"
+
 	"github.com/lib/pq"
 	uuid "github.com/satori/go.uuid"
 	"go.mongodb.org/mongo-driver/bson"
-	"time"
 )
 
 type Rating struct {

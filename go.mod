@@ -8,6 +8,7 @@ require (
 	github.com/brianvoe/gofakeit/v6 v6.25.0
 	github.com/gin-gonic/gin v1.8.1
 	github.com/go-playground/validator/v10 v10.10.0
+	github.com/hashicorp/go-uuid v1.0.3
 	github.com/lib/pq v1.10.9
 	github.com/pkg/errors v0.9.1
 	github.com/satori/go.uuid v1.2.0

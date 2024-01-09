@@ -11,9 +11,13 @@ var (
 	ErrProductNotFound            = "10005"
 	ErrQuantityMustHigherThanZero = "10006"
 	ErrQuantityNotEnough          = "10007"
-	ErrInvalidProductID           = "10008"
-	ErrCategoryNotFound           = "10009"
-	ErrInvalidCategoryName        = "10010"
+	ErrIdNotFound                 = "10008"
+	ErrProductAttributesNotFound  = "10009"
+	ErrTierVariationNotFound      = "10010"
+	ErrDeleteFailed               = "10011"
+	ErrInvalidProductID           = "10012"
+	ErrCategoryNotFound           = "10013"
+	ErrInvalidCategoryName        = "10014"
 )
 
 type MessageAndStatus struct {
@@ -30,6 +34,10 @@ var MapErrorCodeMessage = map[string]MessageAndStatus{
 	ErrProductNotFound:            {"Product Not Found", http.StatusNotFound},
 	ErrQuantityMustHigherThanZero: {"Quantity must higher than zero", http.StatusBadRequest},
 	ErrQuantityNotEnough:          {"Quantity not enough", http.StatusBadRequest},
+	ErrIdNotFound:                 {"Invalid id", http.StatusBadRequest},
+	ErrProductAttributesNotFound:  {"Product Attributes not found", http.StatusBadRequest},
+	ErrTierVariationNotFound:      {"Tier Variation not found", http.StatusBadRequest},
+	ErrDeleteFailed:               {"Delete Failed", http.StatusInternalServerError},
 	ErrInvalidProductID:           {"Invalid Product ID", http.StatusBadRequest},
 	ErrCategoryNotFound:           {"Category Not Found", http.StatusNotFound},
 	ErrInvalidCategoryName:        {"Invalid Category Name", http.StatusBadRequest},
