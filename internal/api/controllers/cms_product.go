@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	"productservice/config"
 	"productservice/internal/api/request"
 	"productservice/internal/domain"
 	"productservice/internal/messaging/message"
@@ -16,13 +17,15 @@ type CmsProductController struct {
 	cmsProductService  domain.CmsProductService
 	cmsProductProducer producer.CmsProductProducer
 	logger             *zap.Logger
+	config             *config.Config
 }
 
-func NewCmsProductController(authService domain.CmsProductService, logger *zap.Logger, cmsProductProducer producer.CmsProductProducer) *CmsProductController {
+func NewCmsProductController(authService domain.CmsProductService, logger *zap.Logger, cmsProductProducer producer.CmsProductProducer, config *config.Config) *CmsProductController {
 	controller := &CmsProductController{
 		cmsProductService:  authService,
 		logger:             logger,
 		cmsProductProducer: cmsProductProducer,
+		config:             config,
 	}
 	return controller
 }
@@ -46,7 +49,7 @@ func (b *CmsProductController) CreateProduct(c *gin.Context) {
 func (b *CmsProductController) GetProductById(c *gin.Context) {
 	id := c.Param("id")
 
-	p, err := b.cmsProductService.GetProductById(c.Request.Context(), id)
+	p, err := b.cmsProductService.GetProductByID(c.Request.Context(), id)
 
 	if err != nil {
 		ResponseError(c, err)
@@ -87,11 +90,15 @@ func (b *CmsProductController) DecreaseProductQuantity(c *gin.Context) {
 		return
 	}
 
-	err = b.cmsProductProducer.DecreaseProductQuantity(c.Request.Context(), message.DecreaseProductQuantity{
-		ProductID: id,
-		Quantity:  req.Quantity,
-		UserID:    uid.String(),
-	})
+	if b.config.Kafka.Enable {
+		err = b.cmsProductProducer.DecreaseProductQuantity(c.Request.Context(), message.DecreaseProductQuantity{
+			ProductID: id,
+			Quantity:  req.Quantity,
+			UserID:    uid.String(),
+		})
+	} else {
+		err = b.cmsProductService.DecreaseProductQuantity(c.Request.Context(), id, req.Quantity)
+	}
 
 	if err != nil {
 		ResponseError(c, err)

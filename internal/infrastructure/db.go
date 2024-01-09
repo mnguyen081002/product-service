@@ -117,12 +117,12 @@ func getDatabaseInstance(config *config.Config) (rdbms *gorm.DB, nosql *mongo.Da
 
 func (d Database) RegisterTables() {
 	err := d.RDBMS.AutoMigrate(
-		models.Category{},
 		models.Product{},
 		models.ProductAttributes{},
 		models.ProductModel{},
-		models.Rating{},
 		models.TierVariations{},
+		models.Category{},
+		models.Rating{},
 	)
 
 	if err != nil {

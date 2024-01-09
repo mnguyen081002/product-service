@@ -11,10 +11,12 @@ import (
 )
 
 type UnitOfWork struct {
-	ProductRepository           domain.ProductRepository
 	ProductAttributesRepository domain.ProductAttributesRepository
 	TierVariationRepository     domain.TierVariationRepository
 	ProductModelRepository      domain.ProductModelRepository
+	ProductRepository           domain.ProductRepository
+	CategoryRepository          domain.CategoryRepository
+	RatingRepository            domain.RatingRepository
 }
 
 func NewUnitOfWorkGorm() *UnitOfWork {
@@ -23,6 +25,8 @@ func NewUnitOfWorkGorm() *UnitOfWork {
 		ProductAttributesRepository: gormlib.NewProductAttributesRepository(),
 		TierVariationRepository:     gormlib.NewTierVariationRepository(),
 		ProductModelRepository:      gormlib.NewProductModelRepository(),
+		CategoryRepository:          gormlib.NewCategoryRepository(),
+		RatingRepository:            gormlib.NewRatingRepository(),
 	}
 }
 

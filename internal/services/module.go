@@ -7,4 +7,7 @@ var Module = fx.Provide(
 	NewCmsProductAttributesService,
 	NewTierVariationService,
 	NewProductModel,
+	NewCmsCategoryService,
+	NewRatingService,
+	NewProductService,
 )

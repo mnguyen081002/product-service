@@ -18,9 +18,12 @@ type Product struct {
 	OriPrice     int64             `json:"ori_price" gorm:"column:ori_price;type:bigint;not null;default:0" bson:"ori_price"`
 	TotalSold    int64             `json:"total_sold" gorm:"column:total_sold;type:bigint;not null;default:0" bson:"total_sold"`
 	MedRating    float64           `json:"med_rating" gorm:"column:med_rating;type:float;not null;default:0" bson:"med_rating"`
+	RatingCount  int64             `json:"rating_count" gorm:"column:rating_count;type:bigint;not null;default:0" bson:"rating_count"`
 	CityID       string            `json:"city_id" gorm:"column:city_id;type:varchar(255)" bson:"city_id"`
-	Rating       []Rating          `json:"rating" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
-	Product_attr ProductAttributes `json:"product_attr" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
+	Category     *Category         `json:"category,omitempty"`
+	CategoryID   *uuid.UUID        `json:"-" gorm:"column:category_id;type:uuid;not null" bson:"category_id"`
+	Rating       []*Rating         `json:"rating,omitempty" gorm:"foreignKey:ProductID;references:ID" bson:"rating"`
+	ProductAttr  ProductAttributes `json:"product_attr" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
 	TierVar      []TierVariations  `json:"tier_var" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
 	ProductModel []ProductModel    `json:"models" gorm:"foreignKey:ProductID;references:ID" bson:"-"`
 }

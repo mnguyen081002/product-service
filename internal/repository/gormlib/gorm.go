@@ -40,7 +40,7 @@ func GormQueryPagination[E any](tx *gorm.DB, o request.PageOptions, data *[]*E) 
 	}
 	offset := (o.Page - 1) * o.Limit
 
-	q.tx = q.tx.Offset(int(offset)).Limit(int(o.Limit)).Find(&data)
+	q.tx = q.tx.Offset(offset).Limit(o.Limit).Find(&data)
 	return q
 }
 

@@ -3,6 +3,7 @@ package subscriber
 import (
 	"context"
 	"go.uber.org/zap"
+	"productservice/config"
 	"productservice/internal/constants"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
@@ -13,9 +14,13 @@ type UpdateProductSubscribe struct {
 	kafkaSubscribe    infrastructure.KafkaSubscribe
 	cmsProductService domain.CmsProductService
 	logger            *zap.Logger
+	config            *config.Config
 }
 
-func NewUpdateProductSubscribe(cmsProductService domain.CmsProductService, logger *zap.Logger) {
+func NewUpdateProductSubscribe(cmsProductService domain.CmsProductService, logger *zap.Logger, config *config.Config) {
+	if !config.Kafka.Enable {
+		return
+	}
 	kafkaSub := infrastructure.NewKafkaSubscribe(constants.TopicCmsProductDecreaseProductQuantity)
 	s := UpdateProductSubscribe{kafkaSubscribe: kafkaSub, cmsProductService: cmsProductService, logger: logger}
 	go s.Subscribe()
@@ -42,5 +47,6 @@ func (s *UpdateProductSubscribe) Subscribe() {
 			s.logger.Error("Error commit message", zap.Error(err))
 			continue
 		}
+		s.logger.Info("Decrease product quantity", zap.String("product_id", msg.ProductID))
 	}
 }

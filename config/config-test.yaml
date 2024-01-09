@@ -21,16 +21,11 @@ database:
     timezone: 'Asia/Ho_Chi_Minh'
   postgres:
     #    host: '34.92.104.68'
-    # host: '192.168.1.235'
-    # port: '5432'
-    port: '6500'
-    host: '127.0.0.0'
-    # username: 'postgres'
-    username: 'admin'
-    # password: 'postgres'
-    password: 'password123'
-    name: 'golang_postgres'
-    # name: 'n_product_service'
+    host: 'localhost'
+    port: '5432'
+    username: 'postgres'
+    password: 'postgres'
+    name: 'n_product_service_test'
     sslmode: 'disable'
     timezone: 'Asia/Ho_Chi_Minh'
 
@@ -43,8 +38,8 @@ jwt:
   iss: 'iss'
 logger:
   level: 'debug'
-  enabled: true
+  enabled: false
 kafka:
   host: 'localhost'
   port: '9092'
-  enable: false
+  enable: true

@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 	"productservice/config"
 	"productservice/internal/api/request"
@@ -42,23 +43,29 @@ func NewCmsProductService(
 }
 
 func (a *cmsProductService) CreateProduct(ctx context.Context, req request.CreateProductRequest) (product *models.Product, err error) {
+	catId, err := uuid.FromString(req.CategoryID)
+	if err != nil {
+		return nil, err
+	}
+
 	return a.ufw.ProductRepository.Create(&a.db, ctx, &models.Product{
 		Name:        req.Name,
 		Description: req.Description,
 		Price:       req.Price,
 		Quantity:    req.Quantity,
 		Images:      req.Images,
+		CategoryID:  &catId,
 	})
 }
 
-func (a *cmsProductService) GetProductById(ctx context.Context, id string) (product *models.Product, err error) {
+func (a *cmsProductService) GetProductByID(ctx context.Context, id string) (product *models.Product, err error) {
 	return a.ufw.ProductRepository.GetById(&a.db, ctx, id)
 }
 
-func (a *cmsProductService) ListProduct(ctx context.Context, input request.ListProductRequest) (res []*models.Product, total *int64, err error) {
+func (a *cmsProductService) ListProduct(ctx context.Context, input request.ListProductRequest) (res []*models.Product, total int64, err error) {
 	list, total, err := a.ufw.ProductRepository.List(&a.db, ctx, input)
 	if err != nil {
-		return nil, nil, err
+		return nil, 0, err
 	}
 	return list, total, nil
 }

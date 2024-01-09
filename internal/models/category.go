@@ -8,9 +8,11 @@ import (
 
 type Category struct {
 	BaseModel `bson:",inline"`
-	Name      string    `json:"name" gorm:"column:name;type:varchar(255);not null" bson:"name"`
-	ParentID  uuid.UUID `json:"parent_id" gorm:"column:parent_id;type:uuid" bson:"parent_id"`
-	NoSub     bool      `json:"no_sub" gorm:"column:no_sub;type:boolean;not null;default:false" bson:"no_sub"`
+	Name      string     `json:"name" gorm:"column:name;type:varchar(255);not null" bson:"name"`
+	ParentID  *uuid.UUID `json:"parent_id" gorm:"column:parent_id;type:uuid" bson:"parent_id"`
+	Parent    *Category  `json:"parent,omitempty" gorm:"foreignKey:ParentID;references:ID" bson:"parent"`
+	NoSub     bool       `json:"no_sub" gorm:"column:no_sub;type:boolean;not null;default:false" bson:"no_sub"`
+	Products  []*Product `json:"products,omitempty" gorm:"foreignKey:CategoryID;references:ID" bson:"products"`
 }
 
 func (u *Category) MarshalBSON() ([]byte, error) {

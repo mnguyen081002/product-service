@@ -6,6 +6,7 @@ type CreateProductRequest struct {
 	Price       int64    `json:"price" binding:"required"`
 	Quantity    int64    `json:"quantity" binding:"required"`
 	Images      []string `json:"images" binding:"required"`
+	CategoryID  string   `json:"category_id" binding:"required,uuid"`
 }
 
 type ListProductRequest struct {
