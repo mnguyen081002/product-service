@@ -3,21 +3,22 @@ package api_errors
 import "net/http"
 
 var (
-	ErrInternalServerError        = "10000"
-	ErrUnauthorizedAccess         = "10001"
-	ErrCreateProduct              = "10002"
-	ErrInvalidUserID              = "10003"
-	ErrValidation                 = "10004"
-	ErrProductNotFound            = "10005"
-	ErrQuantityMustHigherThanZero = "10006"
-	ErrQuantityNotEnough          = "10007"
-	ErrIdNotFound                 = "10008"
-	ErrProductAttributesNotFound  = "10009"
-	ErrTierVariationNotFound      = "10010"
-	ErrDeleteFailed               = "10011"
-	ErrInvalidProductID           = "10012"
-	ErrCategoryNotFound           = "10013"
-	ErrInvalidCategoryName        = "10014"
+	ErrInternalServerError = "10000"
+	ErrUnauthorizedAccess  = "10001"
+	ErrInvalidUserID       = "10002"
+	ErrValidation          = "10003"
+	ErrDeleteFailed        = "10004"
+
+	ErrCreateProduct              = "40000"
+	ErrProductNotFound            = "40001"
+	ErrQuantityMustHigherThanZero = "40002"
+	ErrQuantityNotEnough          = "40003"
+	ErrIdNotFound                 = "40004"
+	ErrProductAttributesNotFound  = "40005"
+	ErrTierVariationNotFound      = "40006"
+	ErrInvalidProductID           = "40007"
+	ErrCategoryNotFound           = "40008"
+	ErrInvalidCategoryName        = "40009"
 )
 
 type MessageAndStatus struct {
