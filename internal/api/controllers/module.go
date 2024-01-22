@@ -12,5 +12,6 @@ var Module = fx.Options(
 		NewProductModelsController,
 		NewRatingController,
 		NewProductController,
+		NewOrderController,
 	),
 )

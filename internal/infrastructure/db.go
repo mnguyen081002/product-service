@@ -123,6 +123,7 @@ func (d Database) RegisterTables() {
 		models.TierVariations{},
 		models.Category{},
 		models.Rating{},
+		models.Order{},
 	)
 
 	if err != nil {

@@ -56,3 +56,12 @@ func (a *productModelService) GetListByProductId(ctx context.Context, productID 
 
 	return res, nil
 }
+
+func (a *productModelService) GetProductModelByID(ctx context.Context, productID string) (res *models.ProductModel, err error) {
+	res, err = a.ufw.ProductModelRepository.GetProductModelByID(&a.db, ctx, productID)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}

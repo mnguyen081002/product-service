@@ -18,6 +18,15 @@ func NewProductModelRepository() domain.ProductModelRepository {
 	return productModelRepository{}
 }
 
+// GetProductModelByID
+func (u productModelRepository) GetProductModelByID(db *infrastructure.Database, ctx context.Context, id string) (res *models.ProductModel, err error) {
+	if err := db.RDBMS.WithContext(ctx).Where("id = ?", id).First(&res).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return res, nil
+}
+
 // Create
 func (u productModelRepository) Create(db *infrastructure.Database, ctx context.Context, productModel *models.ProductModel) (res *models.ProductModel, err error) {
 	if err := db.RDBMS.WithContext(ctx).Create(&productModel).Error; err != nil {
