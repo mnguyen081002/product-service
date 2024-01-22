@@ -17,6 +17,7 @@ type UnitOfWork struct {
 	ProductRepository           domain.ProductRepository
 	CategoryRepository          domain.CategoryRepository
 	RatingRepository            domain.RatingRepository
+	OrderRepository             domain.OrderRepository
 }
 
 func NewUnitOfWorkGorm() *UnitOfWork {
@@ -27,6 +28,7 @@ func NewUnitOfWorkGorm() *UnitOfWork {
 		ProductModelRepository:      gormlib.NewProductModelRepository(),
 		CategoryRepository:          gormlib.NewCategoryRepository(),
 		RatingRepository:            gormlib.NewRatingRepository(),
+		OrderRepository:             gormlib.NewOrderRepository(),
 	}
 }
 

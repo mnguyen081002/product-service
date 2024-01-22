@@ -15,5 +15,6 @@ var Module = fx.Options(
 		NewCmsProductAttributesRoutes,
 		NewTierVariationRoutes,
 		NewProductModelsRoutes,
+		NewOderRoutes,
 	),
 )

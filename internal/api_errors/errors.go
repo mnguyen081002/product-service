@@ -18,6 +18,8 @@ var (
 	ErrInvalidProductID           = "10012"
 	ErrCategoryNotFound           = "10013"
 	ErrInvalidCategoryName        = "10014"
+	ErrOrderNotFound              = "60000"
+	ErrDeleteOrderFailed          = "60001"
 )
 
 type MessageAndStatus struct {
@@ -41,4 +43,5 @@ var MapErrorCodeMessage = map[string]MessageAndStatus{
 	ErrInvalidProductID:           {"Invalid Product ID", http.StatusBadRequest},
 	ErrCategoryNotFound:           {"Category Not Found", http.StatusNotFound},
 	ErrInvalidCategoryName:        {"Invalid Category Name", http.StatusBadRequest},
+	ErrOrderNotFound:              {"Order Not Found", http.StatusNotFound},
 }
