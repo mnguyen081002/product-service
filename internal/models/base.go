@@ -1,6 +1,7 @@
 package models
 
 import (
+	"net/http"
 	"productservice/internal/api_errors"
 	"time"
 
@@ -26,7 +27,8 @@ func (b *BaseModel) BeforeCreate(tx *gorm.DB) (err error) {
 	if updater_id != nil {
 		i, err := uuid.FromString(updater_id.(string))
 		if err != nil {
-			return errors.New(api_errors.ErrInvalidUserID)
+			return api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrInvalidUserID],
+				http.StatusBadRequest, api_errors.ErrInvalidUserID)
 		}
 		b.UpdaterID = &i
 		return nil
@@ -40,7 +42,8 @@ func (b *BaseModel) BeforeUpdate(tx *gorm.DB) (err error) {
 	if updater_id != nil {
 		i, err := uuid.FromString(updater_id.(string))
 		if err != nil {
-			return errors.New(api_errors.ErrInvalidUserID)
+			return api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrInvalidUserID],
+				http.StatusBadRequest, api_errors.ErrInvalidUserID)
 		}
 		b.UpdaterID = &i
 		return nil
@@ -54,7 +57,8 @@ func (b *BaseModel) BeforeDelete(tx *gorm.DB) (err error) {
 	if updater_id != nil {
 		i, err := uuid.FromString(updater_id.(string))
 		if err != nil {
-			return errors.New(api_errors.ErrInvalidUserID)
+			return api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrInvalidUserID],
+				http.StatusBadRequest, api_errors.ErrInvalidUserID)
 		}
 		b.UpdaterID = &i
 		return nil

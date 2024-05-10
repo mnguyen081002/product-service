@@ -2,6 +2,7 @@ package gormlib
 
 import (
 	"context"
+	"net/http"
 	"productservice/internal/api_errors"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
@@ -29,7 +30,7 @@ func (u productAttributesRepository) Create(db *infrastructure.Database, ctx con
 // Update
 func (u productAttributesRepository) Update(db *infrastructure.Database, ctx context.Context, id string, updates map[string]interface{}) (err error) {
 	if err := db.RDBMS.WithContext(ctx).Model(&models.ProductAttributes{}).Where("id = ?", id).Updates(updates).Error; err != nil {
-		return errors.WithStack(err)
+		return errors.Cause(err)
 	}
 
 	return nil
@@ -39,13 +40,11 @@ func (u productAttributesRepository) Update(db *infrastructure.Database, ctx con
 func (u productAttributesRepository) GetById(db *infrastructure.Database, ctx context.Context, id string) (res *models.ProductAttributes, err error) {
 	var productAttributes models.ProductAttributes
 	if err := db.RDBMS.WithContext(ctx).Where("id = ?", id).First(&productAttributes).Error; err != nil {
-
 		if utils.ErrNoRows(err) {
-			return nil, errors.New(api_errors.ErrProductAttributesNotFound)
+			return nil, api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrProductAttributesNotFound],
+				http.StatusNotFound, api_errors.ErrProductAttributesNotFound)
 		}
-
 		return nil, errors.Cause(err)
 	}
-
 	return &productAttributes, nil
 }

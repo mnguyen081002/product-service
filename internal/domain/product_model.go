@@ -5,6 +5,8 @@ import (
 	"productservice/internal/api/request"
 	"productservice/internal/infrastructure"
 	"productservice/internal/models"
+
+	uuid "github.com/satori/go.uuid"
 )
 
 type ProductModelRepository interface {
@@ -13,6 +15,7 @@ type ProductModelRepository interface {
 	Update(db *infrastructure.Database, ctx context.Context, id string, updates map[string]interface{}) (err error)
 	BulkDeleteByProductIdAndItemIndex(db *infrastructure.Database, ctx context.Context, productID string, char string, optionsID int) (err error)
 	GetListByProductId(db *infrastructure.Database, ctx context.Context, productID string) (res []*models.ProductModel, err error)
+	GetListProductModelByIds(db *infrastructure.Database, ctx context.Context, ids []uuid.UUID) (res []*models.ProductModel, err error)
 }
 
 type ProductModelService interface {

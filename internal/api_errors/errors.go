@@ -1,6 +1,36 @@
 package api_errors
 
-import "net/http"
+type ExternalError interface {
+	Error() string
+	Status() int
+	Code() string
+}
+
+type externalError struct {
+	message string
+	status  int
+	code    string
+}
+
+func NewExternalError(message string, status int, code string) ExternalError {
+	return externalError{
+		message: message,
+		status:  status,
+		code:    code,
+	}
+}
+
+func (e externalError) Error() string {
+	return e.message
+}
+
+func (e externalError) Status() int {
+	return e.status
+}
+
+func (e externalError) Code() string {
+	return e.code
+}
 
 var (
 	ErrInternalServerError        = "10000"
@@ -18,27 +48,28 @@ var (
 	ErrInvalidProductID           = "10012"
 	ErrCategoryNotFound           = "10013"
 	ErrInvalidCategoryName        = "10014"
+	ErrInvalidUUID                = "10015"
+	ErrProductAttributeNotFound   = "10016"
+
+	ErrCartQuantityMustHigherThanZero = "70000"
 )
 
-type MessageAndStatus struct {
-	Message string
-	Status  int
-}
-
-var MapErrorCodeMessage = map[string]MessageAndStatus{
-	ErrInternalServerError:        {"Internal Server Error", http.StatusInternalServerError},
-	ErrUnauthorizedAccess:         {"Unauthorized Access", http.StatusUnauthorized},
-	ErrCreateProduct:              {"Error Create Product", http.StatusInternalServerError},
-	ErrInvalidUserID:              {"Invalid User ID", http.StatusBadRequest},
-	ErrValidation:                 {"Validation Error", http.StatusBadRequest},
-	ErrProductNotFound:            {"Product Not Found", http.StatusNotFound},
-	ErrQuantityMustHigherThanZero: {"Quantity must higher than zero", http.StatusBadRequest},
-	ErrQuantityNotEnough:          {"Quantity not enough", http.StatusBadRequest},
-	ErrIdNotFound:                 {"Invalid id", http.StatusBadRequest},
-	ErrProductAttributesNotFound:  {"Product Attributes not found", http.StatusBadRequest},
-	ErrTierVariationNotFound:      {"Tier Variation not found", http.StatusBadRequest},
-	ErrDeleteFailed:               {"Delete Failed", http.StatusInternalServerError},
-	ErrInvalidProductID:           {"Invalid Product ID", http.StatusBadRequest},
-	ErrCategoryNotFound:           {"Category Not Found", http.StatusNotFound},
-	ErrInvalidCategoryName:        {"Invalid Category Name", http.StatusBadRequest},
+var MapErrCodeMsg = map[string]string{
+	ErrInternalServerError:        "Internal Server Error",
+	ErrUnauthorizedAccess:         "Unauthorized Access",
+	ErrCreateProduct:              "Error Create Product",
+	ErrInvalidUserID:              "Invalid User ID",
+	ErrValidation:                 "Validation Error",
+	ErrProductNotFound:            "Product Not Found",
+	ErrQuantityMustHigherThanZero: "Quantity must higher than zero",
+	ErrQuantityNotEnough:          "Quantity not enough",
+	ErrIdNotFound:                 "Invalid id",
+	ErrProductAttributesNotFound:  "Product Attributes not found",
+	ErrTierVariationNotFound:      "Tier Variation not found",
+	ErrDeleteFailed:               "Delete Failed",
+	ErrInvalidProductID:           "Invalid Product ID",
+	ErrCategoryNotFound:           "Category Not Found",
+	ErrInvalidCategoryName:        "Invalid Category Name",
+	ErrInvalidUUID:                "Invalid UUID",
+	ErrProductAttributeNotFound:   "Product Attribute Not Found",
 }

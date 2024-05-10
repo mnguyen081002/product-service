@@ -2,13 +2,14 @@ package gormlib
 
 import (
 	"context"
-	"fmt"
+	"net/http"
 	"productservice/internal/api_errors"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
 	"productservice/internal/models"
 
 	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
 )
 
 type productModelRepository struct {
@@ -48,23 +49,20 @@ func (u productModelRepository) Update(db *infrastructure.Database, ctx context.
 
 // BulkDeleteWithCondition
 func (u productModelRepository) BulkDeleteByProductIdAndItemIndex(db *infrastructure.Database, ctx context.Context, productID string, firstChar string, optionID int) (err error) {
-	fmt.Println("id", productID, firstChar, optionID)
-
 	likeCondition := "%" + firstChar
 	if optionID == 0 {
 		likeCondition = firstChar + "%"
 	}
 
-	fmt.Println(optionID == 0, likeCondition)
-
 	pm := db.RDBMS.WithContext(ctx).Debug().Where("product_id = ?", productID).Where("item_index LIKE ?", likeCondition).Delete(&models.ProductModel{})
 
 	if pm.Error != nil {
-		return errors.WithStack(err)
+		return errors.Cause(err)
 	}
 
 	if pm.RowsAffected == 0 {
-		return errors.New(api_errors.ErrDeleteFailed)
+		return api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrDeleteFailed],
+			http.StatusNotFound, api_errors.ErrDeleteFailed)
 	}
 
 	return nil
@@ -73,6 +71,14 @@ func (u productModelRepository) BulkDeleteByProductIdAndItemIndex(db *infrastruc
 // GetListByProductId
 func (u productModelRepository) GetListByProductId(db *infrastructure.Database, ctx context.Context, productID string) (res []*models.ProductModel, err error) {
 	if err := db.RDBMS.WithContext(ctx).Where("product_id = ?", productID).Find(&res).Error; err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return res, nil
+}
+
+func (u productModelRepository) GetListProductModelByIds(db *infrastructure.Database, ctx context.Context, ids []uuid.UUID) (res []*models.ProductModel, err error) {
+	if err := db.RDBMS.WithContext(ctx).Where("id IN (?)", ids).Find(&res).Error; err != nil {
 		return nil, errors.WithStack(err)
 	}
 

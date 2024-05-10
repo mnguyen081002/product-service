@@ -10,20 +10,17 @@ import (
 	"productservice/internal/models"
 	"productservice/internal/repository"
 	"productservice/internal/utils"
-	"sync"
 
 	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
 type tierVariationService struct {
-	db                          infrastructure.Database
-	dbTransaction               infrastructure.DatabaseTransaction
-	cmsProductAttributesService domain.CmsProductAttributesService
-	ufw                         *repository.UnitOfWork
-	config                      *config.Config
-	logger                      *zap.Logger
-	mu                          sync.Mutex
+	db            infrastructure.Database
+	dbTransaction infrastructure.DatabaseTransaction
+	ufw           *repository.UnitOfWork
+	config        *config.Config
+	logger        *zap.Logger
 }
 
 func NewTierVariationService(

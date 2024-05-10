@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"errors"
 	"net/http"
 	"productservice/internal/api/request"
 	"productservice/internal/api_errors"
@@ -49,7 +48,8 @@ func (controller *ProductAttributesController) UpdateProductAttribute(ctx *gin.C
 	id := ctx.Param("id")
 
 	if !utils.IsValidUUID(id) {
-		ResponseError(ctx, errors.New(api_errors.ErrIdNotFound))
+		ResponseError(ctx, api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrInvalidUUID],
+			http.StatusBadRequest, api_errors.ErrInvalidUUID))
 		return
 	}
 
@@ -64,11 +64,6 @@ func (controller *ProductAttributesController) UpdateProductAttribute(ctx *gin.C
 	_, err = controller.cmsProductAttributesService.GetProductAttributesById(ctx.Request.Context(), id)
 	if err != nil {
 		ResponseError(ctx, err)
-		return
-	}
-
-	if utils.ErrNoRows(err) {
-		ResponseError(ctx, errors.New(api_errors.ErrProductAttributesNotFound))
 		return
 	}
 

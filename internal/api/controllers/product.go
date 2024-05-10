@@ -1,18 +1,18 @@
 package controller
 
 import (
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"net/http"
 	"productservice/config"
 	"productservice/internal/domain"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 type ProductController struct {
-	productService  domain.ProductService
-	categoryService domain.CategoryService
-	logger          *zap.Logger
-	config          *config.Config
+	productService domain.ProductService
+	logger         *zap.Logger
+	config         *config.Config
 }
 
 func NewProductController(productService domain.ProductService, logger *zap.Logger, config *config.Config) *ProductController {

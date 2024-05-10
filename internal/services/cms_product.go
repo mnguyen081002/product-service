@@ -2,9 +2,7 @@ package service
 
 import (
 	"context"
-	"github.com/pkg/errors"
-	uuid "github.com/satori/go.uuid"
-	"go.uber.org/zap"
+	"net/http"
 	"productservice/config"
 	"productservice/internal/api/request"
 	"productservice/internal/api_errors"
@@ -14,6 +12,10 @@ import (
 	"productservice/internal/repository"
 	"sync"
 	"time"
+
+	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
+	"go.uber.org/zap"
 )
 
 type cmsProductService struct {
@@ -72,7 +74,9 @@ func (a *cmsProductService) ListProduct(ctx context.Context, input request.ListP
 
 func (a *cmsProductService) DecreaseProductQuantity(ctx context.Context, id string, quantity int64) (err error) {
 	if quantity < 0 {
-		return errors.New(api_errors.ErrQuantityMustHigherThanZero)
+		return api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrQuantityMustHigherThanZero],
+			http.StatusBadRequest,
+			api_errors.ErrQuantityMustHigherThanZero)
 	}
 	product, err := a.ufw.ProductRepository.GetById(&a.db, ctx, id)
 	if err != nil {
@@ -80,7 +84,9 @@ func (a *cmsProductService) DecreaseProductQuantity(ctx context.Context, id stri
 	}
 
 	if product.Quantity < quantity {
-		return errors.New(api_errors.ErrQuantityNotEnough)
+		return api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrQuantityNotEnough],
+			http.StatusBadRequest,
+			api_errors.ErrQuantityNotEnough)
 	}
 
 	return a.ufw.ProductRepository.Update(&a.db, ctx, id, map[string]interface{}{

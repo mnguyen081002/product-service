@@ -8,7 +8,6 @@ import (
 	"productservice/internal/infrastructure"
 	"productservice/internal/models"
 	"productservice/internal/repository"
-	"sync"
 
 	"go.uber.org/zap"
 )
@@ -16,11 +15,9 @@ import (
 type productModelService struct {
 	db            infrastructure.Database
 	dbTransaction infrastructure.DatabaseTransaction
-	prroductModel domain.ProductModelRepository
 	ufw           *repository.UnitOfWork
 	config        *config.Config
 	logger        *zap.Logger
-	mu            sync.Mutex
 }
 
 func NewProductModel(

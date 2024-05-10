@@ -2,6 +2,7 @@ package gormlib
 
 import (
 	"context"
+	"net/http"
 	"productservice/internal/api/request"
 	"productservice/internal/api_errors"
 	"productservice/internal/domain"
@@ -30,10 +31,10 @@ func (u productRepository) Create(db *infrastructure.Database, ctx context.Conte
 }
 
 func (u productRepository) GetById(db *infrastructure.Database, ctx context.Context, id string) (res *models.Product, err error) {
-
 	if err := db.RDBMS.WithContext(ctx).First(&res, "id = ?", id).Error; err != nil {
 		if utils.ErrNoRows(err) {
-			return nil, errors.New(api_errors.ErrProductNotFound)
+			return nil, api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrProductNotFound],
+				http.StatusNotFound, api_errors.ErrProductNotFound)
 		}
 		return nil, errors.Cause(err)
 	}
@@ -67,7 +68,8 @@ func (u productRepository) Update(db *infrastructure.Database, ctx context.Conte
 func (u productRepository) GetByIdJoinCategory(db *infrastructure.Database, ctx context.Context, id string) (res *models.Product, err error) {
 	if err := db.RDBMS.WithContext(ctx).Preload("Category").First(&res, "id = ?", id).Error; err != nil {
 		if utils.ErrNoRows(err) {
-			return nil, errors.New(api_errors.ErrProductNotFound)
+			return nil, api_errors.NewExternalError(api_errors.MapErrCodeMsg[api_errors.ErrProductNotFound],
+				http.StatusNotFound, api_errors.ErrProductNotFound)
 		}
 		return nil, errors.Cause(err)
 	}

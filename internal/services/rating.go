@@ -2,9 +2,6 @@ package service
 
 import (
 	"context"
-	"github.com/pkg/errors"
-	uuid "github.com/satori/go.uuid"
-	"go.uber.org/zap"
 	"productservice/config"
 	"productservice/internal/api/request"
 	"productservice/internal/api_errors"
@@ -13,17 +10,18 @@ import (
 	"productservice/internal/models"
 	"productservice/internal/repository"
 	"productservice/internal/utils"
-	"sync"
+
+	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
+	"go.uber.org/zap"
 )
 
 type ratingService struct {
 	db            infrastructure.Database
 	dbTransaction infrastructure.DatabaseTransaction
-	ratingService domain.RatingService
 	ufw           *repository.UnitOfWork
 	config        *config.Config
 	logger        *zap.Logger
-	mu            sync.Mutex
 }
 
 func NewRatingService(

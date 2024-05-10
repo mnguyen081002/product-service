@@ -54,16 +54,14 @@ func ResponseList(c *gin.Context, message string, total int64, data interface{})
 }
 
 func ResponseError(c *gin.Context, err error) {
-
-	mas, ok := api_errors.MapErrorCodeMessage[err.Error()]
-	var status int
-	ginType := gin.ErrorTypePublic
-	errp := err
-	if !ok {
-		status = http.StatusInternalServerError
-		ginType = gin.ErrorTypePrivate
-		mas = api_errors.MapErrorCodeMessage[api_errors.ErrInternalServerError]
-		errp = errors.New(api_errors.ErrInternalServerError)
+	v, ok := err.(api_errors.ExternalError)
+	status, mes, code := 500, "Internal Server Error", api_errors.ErrInternalServerError
+	ginType := gin.ErrorTypePrivate
+	if ok {
+		status = v.Status()
+		mes = v.Error()
+		ginType = gin.ErrorTypePublic
+		code = v.Code()
 	}
 
 	c.Errors = append(c.Errors, &gin.Error{
@@ -72,9 +70,9 @@ func ResponseError(c *gin.Context, err error) {
 		Meta: status,
 	})
 
-	c.AbortWithStatusJSON(mas.Status, response.ResponseError{
-		Code:    errp.Error(),
-		Message: mas.Message,
+	c.AbortWithStatusJSON(status, response.ResponseError{
+		Code:    code,
+		Message: mes,
 	})
 }
 
