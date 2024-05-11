@@ -62,7 +62,7 @@ func (s *ratingService) CreateRating(ctx context.Context, req request.CreateRati
 			return err
 		}
 
-		p, err := s.ufw.ProductRepository.GetById(tx, ctx, req.ProductID)
+		p, err := s.ufw.CmsProductRepository.GetById(tx, ctx, req.ProductID)
 		if err != nil {
 			return err
 		}
@@ -70,7 +70,7 @@ func (s *ratingService) CreateRating(ctx context.Context, req request.CreateRati
 		p.MedRating = (p.MedRating*float64(p.RatingCount) + float64(req.Rate)) / float64(p.RatingCount+1)
 		p.RatingCount += 1
 
-		if err := s.ufw.ProductRepository.Update(tx, ctx, req.ProductID, map[string]interface{}{
+		if err := s.ufw.CmsProductRepository.Update(tx, ctx, req.ProductID, map[string]interface{}{
 			"rating_count": p.RatingCount,
 			"med_rating":   p.MedRating,
 		}); err != nil {

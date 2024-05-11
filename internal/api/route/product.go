@@ -10,6 +10,6 @@ type ProductRoutes struct {
 
 func NewProductRoutes(handler *lib.Handler, controller *controller.ProductController) *ProductRoutes {
 	gr := handler.Group("/product")
-	gr.GET("/:id", controller.GetProductById)
+	gr.GET("/", controller.GetProductList)
 	return &ProductRoutes{}
 }

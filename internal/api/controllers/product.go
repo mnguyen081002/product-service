@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"net/http"
 	"productservice/config"
+	"productservice/internal/api/request"
 	"productservice/internal/domain"
 
 	"github.com/gin-gonic/gin"
@@ -24,15 +24,18 @@ func NewProductController(productService domain.ProductService, logger *zap.Logg
 	return controller
 }
 
-func (b *ProductController) GetProductById(c *gin.Context) {
-	id := c.Param("id")
-
-	p, err := b.productService.GetProductByID(c.Request.Context(), id)
+func (b *ProductController) GetProductList(c *gin.Context) {
+	var req request.ClientListProductRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		ResponseValidationError(c, err)
+		return
+	}
+	p, total, err := b.productService.GetProductList(c.Request.Context(), req)
 
 	if err != nil {
 		ResponseError(c, err)
 		return
 	}
 
-	Response(c, http.StatusOK, "success", p)
+	ResponseList(c, "success", total, p)
 }

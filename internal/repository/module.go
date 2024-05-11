@@ -14,14 +14,16 @@ type UnitOfWork struct {
 	ProductAttributesRepository domain.ProductAttributesRepository
 	TierVariationRepository     domain.TierVariationRepository
 	ProductModelRepository      domain.ProductModelRepository
-	ProductRepository           domain.ProductRepository
+	CmsProductRepository        domain.CmsProductRepository
+	ClientProductRepository     domain.ClientProductRepository
 	CategoryRepository          domain.CategoryRepository
 	RatingRepository            domain.RatingRepository
 }
 
 func NewUnitOfWorkGorm() *UnitOfWork {
 	return &UnitOfWork{
-		ProductRepository:           gormlib.NewProductRepository(),
+		CmsProductRepository:        gormlib.NewCmsProductRepository(),
+		ClientProductRepository:     gormlib.NewClientProductRepository(),
 		ProductAttributesRepository: gormlib.NewProductAttributesRepository(),
 		TierVariationRepository:     gormlib.NewTierVariationRepository(),
 		ProductModelRepository:      gormlib.NewProductModelRepository(),

@@ -1,6 +1,6 @@
 package request
 
-type CreateProductRequest struct {
+type CmsCreateProductRequest struct {
 	Name        string   `json:"name" binding:"required"`
 	Description string   `json:"description" binding:"required"`
 	Price       int64    `json:"price" binding:"required"`
@@ -9,11 +9,11 @@ type CreateProductRequest struct {
 	CategoryID  string   `json:"category_id" binding:"required,uuid"`
 }
 
-type ListProductRequest struct {
+type CmsListProductRequest struct {
 	PageOptions
 	Price *int64 `form:"price"`
 }
 
-type UpdateProductQuantityRequest struct {
+type CmsUpdateProductQuantityRequest struct {
 	Quantity int64 `json:"quantity" binding:"required" validate:"min=1"`
 }

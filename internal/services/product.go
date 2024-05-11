@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"productservice/config"
+	"productservice/internal/api/request"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
 	"productservice/internal/models"
@@ -35,6 +36,9 @@ func NewProductService(
 	}
 }
 
-func (p *productService) GetProductByID(ctx context.Context, id string) (product *models.Product, err error) {
-	return p.ufw.ProductRepository.GetByIdJoinCategory(&p.db, ctx, id)
+func (p *productService) GetProductList(ctx context.Context, input request.ClientListProductRequest) (res []*models.Product, total int64, err error) {
+	return p.ufw.ClientProductRepository.List(&p.db, ctx, domain.ClientListProductQueryOptions{
+		PageOptions: input.PageOptions,
+		Price:       input.Price,
+	})
 }

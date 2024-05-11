@@ -1,10 +1,11 @@
 package gormlib
 
 import (
-	"github.com/pkg/errors"
-	"gorm.io/gorm"
 	"productservice/internal/api/request"
 	"productservice/internal/infrastructure"
+
+	"github.com/pkg/errors"
+	"gorm.io/gorm"
 )
 
 type GormRepository struct {

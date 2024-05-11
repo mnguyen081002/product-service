@@ -31,7 +31,7 @@ func NewCmsProductController(authService domain.CmsProductService, logger *zap.L
 }
 
 func (b *CmsProductController) CreateProduct(c *gin.Context) {
-	var req request.CreateProductRequest
+	var req request.CmsCreateProductRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		ResponseValidationError(c, err)
 		return
@@ -59,7 +59,7 @@ func (b *CmsProductController) GetProductById(c *gin.Context) {
 }
 
 func (b *CmsProductController) ListProduct(c *gin.Context) {
-	var req request.ListProductRequest
+	var req request.CmsListProductRequest
 	if err := c.ShouldBindQuery(&req); err != nil {
 		ResponseError(c, err)
 		return
@@ -79,7 +79,7 @@ func (b *CmsProductController) ListProduct(c *gin.Context) {
 
 func (b *CmsProductController) DecreaseProductQuantity(c *gin.Context) {
 	id := c.Param("id")
-	var req request.UpdateProductQuantityRequest
+	var req request.CmsUpdateProductQuantityRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		ResponseValidationError(c, err)
 		return
@@ -109,7 +109,7 @@ func (b *CmsProductController) DecreaseProductQuantity(c *gin.Context) {
 
 func (b *CmsProductController) DecreaseProductQuantityMutex(c *gin.Context) {
 	id := c.Param("id")
-	var req request.UpdateProductQuantityRequest
+	var req request.CmsUpdateProductQuantityRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
 		ResponseValidationError(c, err)
 		return

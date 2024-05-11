@@ -24,10 +24,6 @@ func Response(c *gin.Context, statusCode int, message string, data interface{}) 
 
 func ResponseList(c *gin.Context, message string, total int64, data interface{}) {
 	var o request.PageOptions
-	if err := c.ShouldBindQuery(&o); err != nil {
-		ResponseValidationError(c, err)
-		return
-	}
 
 	if o.Limit == 0 {
 		o.Limit = 10

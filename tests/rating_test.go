@@ -2,9 +2,6 @@ package main
 
 import (
 	"context"
-	"github.com/pkg/errors"
-	uuid "github.com/satori/go.uuid"
-	"go.uber.org/zap"
 	config2 "productservice/config"
 	"productservice/internal/api/request"
 	"productservice/internal/api_errors"
@@ -12,9 +9,13 @@ import (
 	"productservice/internal/infrastructure"
 	"productservice/internal/models"
 	"productservice/internal/repository"
-	"productservice/internal/services"
+	service "productservice/internal/services"
 	"reflect"
 	"testing"
+
+	"github.com/pkg/errors"
+	uuid "github.com/satori/go.uuid"
+	"go.uber.org/zap"
 )
 
 func Test_ratingService_CreateRating(t *testing.T) {
@@ -104,7 +105,7 @@ func Test_ratingService_CreateRating(t *testing.T) {
 			return
 		}
 
-		product, err := cmsProductService.CreateProduct(ctx, request.CreateProductRequest{
+		product, err := cmsProductService.CreateProduct(ctx, request.CmsCreateProductRequest{
 			Name:        "Test Product",
 			Description: "Test Description",
 			Price:       100000,
@@ -160,7 +161,7 @@ func Test_ratingService_CreateRating(t *testing.T) {
 					t.Errorf("CreateRating() = %v, want %v", gotR.Images, tt.wantR.Images)
 				}
 
-				product, err := ufw.ProductRepository.GetById(&db, ctx, product.ID.String())
+				product, err := ufw.CmsProductRepository.GetById(&db, ctx, product.ID.String())
 				if err != nil {
 					t.Errorf("CreateRating() error = %v", err)
 					return

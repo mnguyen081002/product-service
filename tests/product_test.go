@@ -1,17 +1,18 @@
 package main
 
 import (
-	"go.uber.org/zap"
 	"productservice/internal/api/request"
 	"productservice/internal/messaging/message"
 	"productservice/internal/messaging/subscriber"
 	"sync"
 	"testing"
 	"time"
+
+	"go.uber.org/zap"
 )
 
 func TestDecreaseProductQuantityCurrency(t *testing.T) {
-	p, err := cmsProductService.CreateProduct(ctx, request.CreateProductRequest{
+	p, err := cmsProductService.CreateProduct(ctx, request.CmsCreateProductRequest{
 		Name:        "Test",
 		Description: "Test",
 		Price:       0,

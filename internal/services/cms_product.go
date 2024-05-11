@@ -44,13 +44,13 @@ func NewCmsProductService(
 	}
 }
 
-func (a *cmsProductService) CreateProduct(ctx context.Context, req request.CreateProductRequest) (product *models.Product, err error) {
+func (a *cmsProductService) CreateProduct(ctx context.Context, req request.CmsCreateProductRequest) (product *models.Product, err error) {
 	catId, err := uuid.FromString(req.CategoryID)
 	if err != nil {
 		return nil, err
 	}
 
-	return a.ufw.ProductRepository.Create(&a.db, ctx, &models.Product{
+	return a.ufw.CmsProductRepository.Create(&a.db, ctx, &models.Product{
 		Name:        req.Name,
 		Description: req.Description,
 		Price:       req.Price,
@@ -61,11 +61,14 @@ func (a *cmsProductService) CreateProduct(ctx context.Context, req request.Creat
 }
 
 func (a *cmsProductService) GetProductByID(ctx context.Context, id string) (product *models.Product, err error) {
-	return a.ufw.ProductRepository.GetById(&a.db, ctx, id)
+	return a.ufw.CmsProductRepository.GetById(&a.db, ctx, id)
 }
 
-func (a *cmsProductService) ListProduct(ctx context.Context, input request.ListProductRequest) (res []*models.Product, total int64, err error) {
-	list, total, err := a.ufw.ProductRepository.List(&a.db, ctx, input)
+func (a *cmsProductService) ListProduct(ctx context.Context, input request.CmsListProductRequest) (res []*models.Product, total int64, err error) {
+	list, total, err := a.ufw.CmsProductRepository.List(&a.db, ctx, domain.CmsListProductQueryOptions{
+		PageOptions: input.PageOptions,
+		Price:       input.Price,
+	})
 	if err != nil {
 		return nil, 0, err
 	}
@@ -78,7 +81,7 @@ func (a *cmsProductService) DecreaseProductQuantity(ctx context.Context, id stri
 			http.StatusBadRequest,
 			api_errors.ErrQuantityMustHigherThanZero)
 	}
-	product, err := a.ufw.ProductRepository.GetById(&a.db, ctx, id)
+	product, err := a.ufw.CmsProductRepository.GetById(&a.db, ctx, id)
 	if err != nil {
 		return err
 	}
@@ -89,7 +92,7 @@ func (a *cmsProductService) DecreaseProductQuantity(ctx context.Context, id stri
 			api_errors.ErrQuantityNotEnough)
 	}
 
-	return a.ufw.ProductRepository.Update(&a.db, ctx, id, map[string]interface{}{
+	return a.ufw.CmsProductRepository.Update(&a.db, ctx, id, map[string]interface{}{
 		"quantity": product.Quantity - quantity,
 	})
 }
@@ -100,7 +103,7 @@ func (a *cmsProductService) DecreaseProductQuantityMutex(ctx context.Context, id
 	}
 	defer a.mu.Unlock()
 	a.mu.Lock()
-	product, err := a.ufw.ProductRepository.GetById(&a.db, ctx, id)
+	product, err := a.ufw.CmsProductRepository.GetById(&a.db, ctx, id)
 	if err != nil {
 		return err
 	}
@@ -110,7 +113,7 @@ func (a *cmsProductService) DecreaseProductQuantityMutex(ctx context.Context, id
 		return errors.New(api_errors.ErrQuantityNotEnough)
 	}
 
-	err = a.ufw.ProductRepository.Update(&a.db, ctx, id, map[string]interface{}{
+	err = a.ufw.CmsProductRepository.Update(&a.db, ctx, id, map[string]interface{}{
 		"quantity": product.Quantity - quantity,
 	})
 	if err != nil {
