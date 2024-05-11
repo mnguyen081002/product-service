@@ -28,19 +28,20 @@ func (e *GinMiddleware) Logger(c *gin.Context) {
 
 	start := time.Now()
 	blw := &bodyLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
-	c.Writer = blw
-	body, _ := io.ReadAll(c.Request.Body)
-	c.Request.Body = io.NopCloser(bytes.NewReader(body))
+	context := *c
+	context.Writer = blw
+	body, _ := io.ReadAll(context.Request.Body)
+	context.Request.Body = io.NopCloser(bytes.NewReader(body))
 	c.Next()
-	path := c.Request.URL.Path
-	raw := c.Request.URL.RawQuery
+	path := context.Request.URL.Path
+	raw := context.Request.URL.RawQuery
 
 	end := time.Now()
 	latency := end.Sub(start)
 
-	clientIP := c.ClientIP()
-	method := c.Request.Method
-	statusCode := c.Writer.Status()
+	clientIP := context.ClientIP()
+	method := context.Request.Method
+	statusCode := context.Writer.Status()
 
 	l := e.logger.WithOptions(zap.AddStacktrace(zap.DPanicLevel))
 	logger := l.Info
