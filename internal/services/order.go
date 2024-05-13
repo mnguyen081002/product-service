@@ -16,7 +16,7 @@ import (
 
 type orderService struct {
 	orderRepo        domain.OrderRepository
-	productModelRepo domain.ProductModelRepository
+	productModelRepo domain.CmsProductModelRepository
 	orderItemRepo    domain.OrderItemRepository
 	dbTransaction    infrastructure.DatabaseTransaction
 	db               infrastructure.Database

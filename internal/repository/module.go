@@ -11,24 +11,24 @@ import (
 )
 
 type UnitOfWork struct {
-	ProductAttributesRepository domain.ProductAttributesRepository
-	TierVariationRepository     domain.TierVariationRepository
-	ProductModelRepository      domain.ProductModelRepository
-	CmsProductRepository        domain.CmsProductRepository
-	ClientProductRepository     domain.ClientProductRepository
-	CategoryRepository          domain.CategoryRepository
-	RatingRepository            domain.RatingRepository
+	CmsProductAttributesRepository domain.CmsProductAttributesRepository
+	CmsTierVariationRepository     domain.CmsTierVariationRepository
+	CmsProductModelRepository      domain.CmsProductModelRepository
+	CmsProductRepository           domain.CmsProductRepository
+	ClientProductRepository        domain.ClientProductRepository
+	CategoryRepository             domain.CategoryRepository
+	RatingRepository               domain.RatingRepository
 }
 
 func NewUnitOfWorkGorm() *UnitOfWork {
 	return &UnitOfWork{
-		CmsProductRepository:        gormlib.NewCmsProductRepository(),
-		ClientProductRepository:     gormlib.NewClientProductRepository(),
-		ProductAttributesRepository: gormlib.NewProductAttributesRepository(),
-		TierVariationRepository:     gormlib.NewTierVariationRepository(),
-		ProductModelRepository:      gormlib.NewProductModelRepository(),
-		CategoryRepository:          gormlib.NewCategoryRepository(),
-		RatingRepository:            gormlib.NewRatingRepository(),
+		CmsProductRepository:           gormlib.NewCmsProductRepository(),
+		ClientProductRepository:        gormlib.NewClientProductRepository(),
+		CmsProductAttributesRepository: gormlib.NewProductAttributesRepository(),
+		CmsTierVariationRepository:     gormlib.NewTierVariationRepository(),
+		CmsProductModelRepository:      gormlib.NewProductModelRepository(),
+		CategoryRepository:             gormlib.NewCategoryRepository(),
+		RatingRepository:               gormlib.NewRatingRepository(),
 	}
 }
 

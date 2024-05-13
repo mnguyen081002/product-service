@@ -1,12 +1,14 @@
 package request
 
 type CmsCreateProductRequest struct {
-	Name        string   `json:"name" binding:"required"`
-	Description string   `json:"description" binding:"required"`
-	Price       int64    `json:"price" binding:"required"`
-	Quantity    int64    `json:"quantity" binding:"required"`
-	Images      []string `json:"images" binding:"required"`
-	CategoryID  string   `json:"category_id" binding:"required,uuid"`
+	Name         string      `json:"name" binding:"required"`
+	Description  string      `json:"description" binding:"required"`
+	Price        int64       `json:"price" binding:"required"`
+	Quantity     int64       `json:"quantity" binding:"required"`
+	Images       []string    `json:"images" binding:"required"`
+	CategoryID   string      `json:"category_id" binding:"required,uuid"`
+	TierVariants []Variation `json:"tier_variant" binding:"required"`
+	Attributes   []Attribute `json:"attributes" binding:"required"`
 }
 
 type CmsListProductRequest struct {

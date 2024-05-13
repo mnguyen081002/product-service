@@ -14,7 +14,7 @@ import (
 type tierVariationRepository struct {
 }
 
-func NewTierVariationRepository() domain.TierVariationRepository {
+func NewTierVariationRepository() domain.CmsTierVariationRepository {
 	return tierVariationRepository{}
 }
 

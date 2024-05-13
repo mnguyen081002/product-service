@@ -7,10 +7,10 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-type CreateTierVariation struct {
-	ProductID  string      `json:"product_id" validate:"required"`
-	Variations []Variation `json:"variations" validate:"required"`
-}
+// type CreateTierVariation struct {
+// 	ProductID  string      `json:"product_id" validate:"required"`
+// 	Variations []Variation `json:"variations" validate:"required"`
+// }
 
 type UpdateTierVariation struct {
 	ID      int      `json:"id" validate:"required"`
@@ -41,34 +41,43 @@ func ToOptionsTierVar(a []Variation) []models.Variation {
 }
 
 // Convert array []models.Variation to array []models.ArrayProductModel
-func ToArrayProductModel(a []Variation, productID string) []*models.ProductModel {
+func ToArrayProductModel(variant []Variation, productID string) []*models.ProductModel {
 	var modelsOut = make([]*models.ProductModel, 0)
-	init := 0
-
-	ProductID := uuid.FromStringOrNil(productID)
-
-	for {
-		if init+1 >= len(a) {
-			break
+	pid := uuid.FromStringOrNil(productID)
+	var recursive func(int, models.ProductModel)
+	recursive = func(i int, p models.ProductModel) {
+		if i >= len(variant) {
+			newp := p
+			modelsOut = append(modelsOut, &newp)
+			return
 		}
 
-		for i, v := range a[init].Options {
-			for i2, v2 := range a[init+1].Options {
-				modelsOut = append(modelsOut, &models.ProductModel{
-					ProductID: ProductID,
-					Name:      v + "," + v2,
-					TierIndex: fmt.Sprintf("%d%d", i, i2),
-				})
-			}
+		for index, v := range variant[i].Options {
+			p.Name += "," + v
+			p.TierIndex += fmt.Sprintf("%d", index)
+			recursive(i+1, p)
+			p.Name = p.Name[:len(p.Name)-len(v)-1]
+			p.TierIndex = p.TierIndex[:len(p.TierIndex)-1]
 		}
-		init++
+	}
+
+	for i, v := range variant[0].Options {
+		recursive(1, models.ProductModel{
+			ProductID:           pid,
+			Name:                v,
+			TierIndex:           fmt.Sprintf("%d", i),
+			Sold:                0,
+			Price:               0,
+			PriceBeforeDiscount: 0,
+			Stock:               0,
+		})
 	}
 
 	return modelsOut
 }
 
 // Convert array []models.Variation to array []models.ArrayProductModel
-func ToArrayProductModelUpdate(a []Variation, productID string, lenArr int) []*models.ProductModel {
+func ToArrayProductModelUpdate(variant []Variation, productID string, lenArr int) []*models.ProductModel {
 	var modelsOut = make([]*models.ProductModel, 0)
 
 	ProductID := uuid.FromStringOrNil(productID)
@@ -91,8 +100,8 @@ func ToArrayProductModelUpdate(a []Variation, productID string, lenArr int) []*m
 	// 	init++
 	// }
 
-	for i, v := range a[0].Options {
-		for _, v2 := range a[1].Options {
+	for i, v := range variant[0].Options {
+		for _, v2 := range variant[1].Options {
 			t := &models.ProductModel{
 				ProductID: ProductID,
 				Name:      v + "," + v2,

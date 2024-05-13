@@ -7,7 +7,7 @@ import (
 	"productservice/internal/models"
 )
 
-type TierVariationRepository interface {
+type CmsTierVariationRepository interface {
 	Create(db *infrastructure.Database, ctx context.Context, tierVar *models.TierVariations) (res *models.TierVariations, err error)
 	UpdateByProductId(db *infrastructure.Database, ctx context.Context, tierVar map[string]interface{}, id string) (err error)
 	GetById(db *infrastructure.Database, ctx context.Context, id string) (res *models.TierVariations, err error)
@@ -16,7 +16,7 @@ type TierVariationRepository interface {
 }
 
 type TierVariationService interface {
-	CreateTierVariation(ctx context.Context, req request.CreateTierVariation) (tierVar *models.TierVariations, err error)
+	//	CreateTierVariation(ctx context.Context, req request.CreateTierVariation) (tierVar *models.TierVariations, err error)
 	UpdateTierVariationOptions(ctx context.Context, req request.UpdateTierVariation, id string) (err error)
 	DeleteTierVariationOptions(ctx context.Context, req request.DeleteTierVariation) (err error)
 	GetByProductID(ctx context.Context, id string) (res *models.TierVariations, err error)

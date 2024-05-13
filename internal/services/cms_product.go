@@ -49,15 +49,37 @@ func (a *cmsProductService) CreateProduct(ctx context.Context, req request.CmsCr
 	if err != nil {
 		return nil, err
 	}
-
-	return a.ufw.CmsProductRepository.Create(&a.db, ctx, &models.Product{
-		Name:        req.Name,
-		Description: req.Description,
-		Price:       req.Price,
-		Quantity:    req.Quantity,
-		Images:      req.Images,
-		CategoryID:  &catId,
+	var p *models.Product
+	err = a.dbTransaction.WithTransaction(func(tx *infrastructure.Database) error {
+		p, err = a.ufw.CmsProductRepository.Create(tx, ctx, &models.Product{
+			Name:        req.Name,
+			Description: req.Description,
+			Price:       req.Price,
+			Quantity:    req.Quantity,
+			Images:      req.Images,
+			CategoryID:  &catId,
+		})
+		if err != nil {
+			return err
+		}
+		_, err = a.ufw.CmsTierVariationRepository.Create(tx, ctx, &models.TierVariations{
+			ProductID: p.ID,
+			Options:   request.ToOptionsTierVar(req.TierVariants),
+		})
+		if err != nil {
+			return err
+		}
+		_, err = a.ufw.CmsProductModelRepository.BulkCreate(tx, ctx, request.ToArrayProductModel(req.TierVariants, p.ID.String()))
+		if err != nil {
+			return err
+		}
+		_, err = a.ufw.CmsProductAttributesRepository.Create(tx, ctx, &models.ProductAttributes{
+			ProductID:  p.ID,
+			Atrributes: request.ConvertAttributeModel(req.Attributes),
+		})
+		return err
 	})
+	return p, err
 }
 
 func (a *cmsProductService) GetProductByID(ctx context.Context, id string) (product *models.Product, err error) {

@@ -2,12 +2,12 @@ package request
 
 import "productservice/internal/models"
 
-type ProductAttributesCreate struct {
+type CmsCreateProductAttributesRequest struct {
 	ProductID  string      `json:"product_id" validate:"required"`
 	Attributes []Attribute `json:"attributes" validate:"required"`
 }
 
-type ProductAttributesUpdate struct {
+type CmsUpdateProductAttributesRequest struct {
 	Attributes []Attribute `json:"attributes" validate:"required"`
 }
 

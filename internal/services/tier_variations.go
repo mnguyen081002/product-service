@@ -11,7 +11,6 @@ import (
 	"productservice/internal/repository"
 	"productservice/internal/utils"
 
-	uuid "github.com/satori/go.uuid"
 	"go.uber.org/zap"
 )
 
@@ -39,40 +38,9 @@ func NewTierVariationService(
 	}
 }
 
-func (a *tierVariationService) CreateTierVariation(ctx context.Context, req request.CreateTierVariation) (tierVar *models.TierVariations, err error) {
-
-	arrModels := request.ToArrayProductModel(req.Variations, req.ProductID)
-
-	err = a.dbTransaction.WithTransaction(func(tx *infrastructure.Database) error {
-
-		tierVar, err = a.ufw.TierVariationRepository.Create(tx, ctx, &models.TierVariations{
-			ProductID: uuid.FromStringOrNil(req.ProductID),
-			Options:   request.ToOptionsTierVar(req.Variations),
-		})
-
-		if err != nil {
-			return err
-		}
-
-		_, err = a.ufw.ProductModelRepository.BulkCreate(tx, ctx, arrModels)
-
-		if err != nil {
-			return err
-		}
-
-		return nil
-	})
-
-	if err != nil {
-		return tierVar, err
-	}
-
-	return tierVar, err
-}
-
 // UpdateProductAttributes
 func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, req request.UpdateTierVariation, id string) (err error) {
-	t, err := a.ufw.TierVariationRepository.GetByProductID(&a.db, ctx, id)
+	t, err := a.ufw.CmsTierVariationRepository.GetByProductID(&a.db, ctx, id)
 
 	if err != nil {
 		return err
@@ -94,7 +62,7 @@ func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, r
 
 	err = a.dbTransaction.WithTransaction(func(tx *infrastructure.Database) error {
 
-		err = a.ufw.TierVariationRepository.UpdateByProductId(tx, ctx, map[string]interface{}{
+		err = a.ufw.CmsTierVariationRepository.UpdateByProductId(tx, ctx, map[string]interface{}{
 			"options": t.Options,
 		}, id)
 
@@ -104,7 +72,7 @@ func (a *tierVariationService) UpdateTierVariationOptions(ctx context.Context, r
 
 		lenProductModelsUpdate := models.GetLengthOptions(t.Options, req.ID) - 1
 
-		_, err = a.ufw.ProductModelRepository.BulkCreate(tx, ctx, request.ToArrayProductModelUpdate(arrTierVal, t.ProductID.String(), lenProductModelsUpdate))
+		_, err = a.ufw.CmsProductModelRepository.BulkCreate(tx, ctx, request.ToArrayProductModelUpdate(arrTierVal, t.ProductID.String(), lenProductModelsUpdate))
 
 		if err != nil {
 			return err
@@ -125,7 +93,7 @@ func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, r
 
 	id := req.ProductID
 
-	t, err := a.ufw.TierVariationRepository.GetByProductID(&a.db, ctx, id)
+	t, err := a.ufw.CmsTierVariationRepository.GetByProductID(&a.db, ctx, id)
 
 	if err != nil {
 		return err
@@ -146,7 +114,7 @@ func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, r
 
 	err = a.dbTransaction.WithTransaction(func(tx *infrastructure.Database) error {
 
-		err = a.ufw.TierVariationRepository.UpdateByProductId(tx, ctx, map[string]interface{}{
+		err = a.ufw.CmsTierVariationRepository.UpdateByProductId(tx, ctx, map[string]interface{}{
 			"options": t.Options,
 		}, id)
 
@@ -154,7 +122,7 @@ func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, r
 			return err
 		}
 
-		err = a.ufw.ProductModelRepository.BulkDeleteByProductIdAndItemIndex(tx, ctx, req.ProductID, fmt.Sprintf("%d", posEleDel), req.ID)
+		err = a.ufw.CmsProductModelRepository.BulkDeleteByProductIdAndItemIndex(tx, ctx, req.ProductID, fmt.Sprintf("%d", posEleDel), req.ID)
 		if err != nil {
 			return err
 		}
@@ -171,5 +139,5 @@ func (a *tierVariationService) DeleteTierVariationOptions(ctx context.Context, r
 
 // GetByProductID
 func (a *tierVariationService) GetByProductID(ctx context.Context, id string) (res *models.TierVariations, err error) {
-	return a.ufw.TierVariationRepository.GetByProductID(&a.db, ctx, id)
+	return a.ufw.CmsTierVariationRepository.GetByProductID(&a.db, ctx, id)
 }

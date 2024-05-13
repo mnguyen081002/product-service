@@ -15,7 +15,7 @@ import (
 type productModelRepository struct {
 }
 
-func NewProductModelRepository() domain.ProductModelRepository {
+func NewProductModelRepository() domain.CmsProductModelRepository {
 	return productModelRepository{}
 }
 

@@ -10,35 +10,18 @@ import (
 )
 
 type TierVariationController struct {
-	TierVariationService domain.TierVariationService
+	tierVariationService domain.TierVariationService
 	// cmsProductAttributesProducer producer.CmsProductAttributeProducer
 	logger *zap.Logger
 }
 
-func NewTierVariationController(authService domain.TierVariationService, logger *zap.Logger) *TierVariationController {
+func NewTierVariationController(tierVariationService domain.TierVariationService, logger *zap.Logger) *TierVariationController {
 	controller := &TierVariationController{
-		TierVariationService: authService,
+		tierVariationService: tierVariationService,
 		logger:               logger,
 		// cmsProductAttributesProducer: cmsProductAttributesProducer,
 	}
 	return controller
-}
-
-func (controller *TierVariationController) CreateTierVariation(ctx *gin.Context) {
-	var request request.CreateTierVariation
-	err := ctx.ShouldBindJSON(&request)
-	if err != nil {
-		ResponseValidationError(ctx, err)
-		return
-	}
-
-	data, err := controller.TierVariationService.CreateTierVariation(ctx.Request.Context(), request)
-	if err != nil {
-		ResponseError(ctx, err)
-		return
-	}
-
-	Response(ctx, http.StatusOK, "success", data)
 }
 
 func (controller *TierVariationController) UpdateTierVariation(ctx *gin.Context) {
@@ -50,7 +33,7 @@ func (controller *TierVariationController) UpdateTierVariation(ctx *gin.Context)
 	}
 	id := ctx.Param("product_id")
 
-	err = controller.TierVariationService.UpdateTierVariationOptions(ctx.Request.Context(), request, id)
+	err = controller.tierVariationService.UpdateTierVariationOptions(ctx.Request.Context(), request, id)
 	if err != nil {
 		ResponseError(ctx, err)
 		return
@@ -67,7 +50,7 @@ func (controller *TierVariationController) DeleteTierVariationOptions(ctx *gin.C
 		return
 	}
 
-	err = controller.TierVariationService.DeleteTierVariationOptions(ctx.Request.Context(), request)
+	err = controller.tierVariationService.DeleteTierVariationOptions(ctx.Request.Context(), request)
 	if err != nil {
 		ResponseError(ctx, err)
 		return
@@ -80,7 +63,7 @@ func (controller *TierVariationController) DeleteTierVariationOptions(ctx *gin.C
 func (controller *TierVariationController) GetTierVariationByProductID(ctx *gin.Context) {
 	id := ctx.Param("product_id")
 
-	data, err := controller.TierVariationService.GetByProductID(ctx.Request.Context(), id)
+	data, err := controller.tierVariationService.GetByProductID(ctx.Request.Context(), id)
 	if err != nil {
 		ResponseError(ctx, err)
 		return

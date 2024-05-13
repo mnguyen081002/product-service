@@ -27,7 +27,7 @@ func NewCmsProductAttributesController(authService domain.CmsProductAttributesSe
 }
 
 func (controller *ProductAttributesController) CreateProductAttribute(ctx *gin.Context) {
-	var request request.ProductAttributesCreate
+	var request request.CmsCreateProductAttributesRequest
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
 		ResponseValidationError(ctx, err)
@@ -53,7 +53,7 @@ func (controller *ProductAttributesController) UpdateProductAttribute(ctx *gin.C
 		return
 	}
 
-	var request request.ProductAttributesUpdate
+	var request request.CmsUpdateProductAttributesRequest
 	err := ctx.ShouldBindJSON(&request)
 	if err != nil {
 		ResponseValidationError(ctx, err)

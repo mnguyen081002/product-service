@@ -15,7 +15,7 @@ import (
 type productAttributesRepository struct {
 }
 
-func NewProductAttributesRepository() domain.ProductAttributesRepository {
+func NewProductAttributesRepository() domain.CmsProductAttributesRepository {
 	return productAttributesRepository{}
 }
 

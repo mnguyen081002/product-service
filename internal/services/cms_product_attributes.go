@@ -38,18 +38,18 @@ func NewCmsProductAttributesService(
 	}
 }
 
-func (a *cmsProductAttributesService) CreateProductAttributes(ctx context.Context, req request.ProductAttributesCreate) (productAttributes *models.ProductAttributes, err error) {
-	return a.ufw.ProductAttributesRepository.Create(&a.db, ctx, &models.ProductAttributes{
+func (a *cmsProductAttributesService) CreateProductAttributes(ctx context.Context, req request.CmsCreateProductAttributesRequest) (productAttributes *models.ProductAttributes, err error) {
+	return a.ufw.CmsProductAttributesRepository.Create(&a.db, ctx, &models.ProductAttributes{
 		ProductID:  uuid.FromStringOrNil(req.ProductID),
 		Atrributes: request.ConvertAttributeModel(req.Attributes),
 	})
 }
 
 // UpdateProductAttributes
-func (a *cmsProductAttributesService) UpdateProductAttributes(ctx context.Context, id string, req request.ProductAttributesUpdate) (err error) {
+func (a *cmsProductAttributesService) UpdateProductAttributes(ctx context.Context, id string, req request.CmsUpdateProductAttributesRequest) (err error) {
 
 	//check product attributes exist
-	_, err = a.ufw.ProductAttributesRepository.GetById(&a.db, ctx, id)
+	_, err = a.ufw.CmsProductAttributesRepository.GetById(&a.db, ctx, id)
 
 	if err != nil {
 		return err
@@ -61,10 +61,10 @@ func (a *cmsProductAttributesService) UpdateProductAttributes(ctx context.Contex
 	updates := map[string]interface{}{
 		"attributes": ms,
 	}
-	return a.ufw.ProductAttributesRepository.Update(&a.db, ctx, id, updates)
+	return a.ufw.CmsProductAttributesRepository.Update(&a.db, ctx, id, updates)
 }
 
 // GetProductAttributesById
 func (a *cmsProductAttributesService) GetProductAttributesById(ctx context.Context, id string) (productAttributes *models.ProductAttributes, err error) {
-	return a.ufw.ProductAttributesRepository.GetById(&a.db, ctx, id)
+	return a.ufw.CmsProductAttributesRepository.GetById(&a.db, ctx, id)
 }
