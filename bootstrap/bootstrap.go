@@ -1,19 +1,19 @@
 package bootstrap
 
 import (
-	"go.uber.org/fx"
-	"go.uber.org/fx/fxevent"
-	"go.uber.org/zap"
 	"productservice/config"
 	controller "productservice/internal/api/controllers"
 	"productservice/internal/api/middlewares"
 	"productservice/internal/api/route"
 	"productservice/internal/infrastructure"
 	"productservice/internal/lib"
-	"productservice/internal/messaging"
 	"productservice/internal/repository"
 	service "productservice/internal/services"
 	"productservice/internal/utils"
+
+	"go.uber.org/fx"
+	"go.uber.org/fx/fxevent"
+	"go.uber.org/zap"
 )
 
 func inject() fx.Option {
@@ -33,7 +33,6 @@ func inject() fx.Option {
 		controller.Module,
 		middlewares.Module,
 		infrastructure.Module,
-		messaging.Module,
 	)
 }
 

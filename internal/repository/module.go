@@ -4,32 +4,13 @@ import (
 	"productservice/config"
 	"productservice/internal/domain"
 	"productservice/internal/infrastructure"
-	"productservice/internal/repository/gormlib"
-	"productservice/internal/repository/mongo"
 
 	"go.uber.org/fx"
 )
 
 type UnitOfWork struct {
-	CmsProductAttributesRepository domain.CmsProductAttributesRepository
-	CmsTierVariationRepository     domain.CmsTierVariationRepository
-	CmsProductModelRepository      domain.CmsProductModelRepository
-	CmsProductRepository           domain.CmsProductRepository
-	ClientProductRepository        domain.ClientProductRepository
-	CategoryRepository             domain.CategoryRepository
-	RatingRepository               domain.RatingRepository
-}
-
-func NewUnitOfWorkGorm() *UnitOfWork {
-	return &UnitOfWork{
-		CmsProductRepository:           gormlib.NewCmsProductRepository(),
-		ClientProductRepository:        gormlib.NewClientProductRepository(),
-		CmsProductAttributesRepository: gormlib.NewProductAttributesRepository(),
-		CmsTierVariationRepository:     gormlib.NewTierVariationRepository(),
-		CmsProductModelRepository:      gormlib.NewProductModelRepository(),
-		CategoryRepository:             gormlib.NewCategoryRepository(),
-		RatingRepository:               gormlib.NewRatingRepository(),
-	}
+	CmsProductRepository    domain.CmsProductRepository
+	ClientProductRepository domain.ClientProductRepository
 }
 
 func NewUnitOfWorkMongo() *UnitOfWork {
@@ -39,17 +20,12 @@ func NewUnitOfWorkMongo() *UnitOfWork {
 func NewUnitOfWork(config *config.Config) *UnitOfWork {
 	if config.Database.Driver == "mongo" {
 		return NewUnitOfWorkMongo()
-	} else {
-		return NewUnitOfWorkGorm()
 	}
+	return NewUnitOfWorkMongo()
 }
 
 func NewRepository(config *config.Config, database infrastructure.Database) infrastructure.DatabaseTransaction {
-	if config.Database.Driver == "mongo" {
-		return mongo.NewMongoTransaction(database)
-	} else {
-		return gormlib.NewGormTransaction(database)
-	}
+	return nil
 }
 
 var Module = fx.Options(
